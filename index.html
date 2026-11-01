@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pet Shop R9</title>
+<style>
+  body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0b5394,#3d85c6);font-family:'Sarabun',system-ui,sans-serif;color:#24364d}
+  .c{background:#fff;border-radius:16px;padding:28px 26px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.25)}
+  a{display:inline-block;margin-top:14px;background:#0b5394;color:#fff;padding:12px 22px;border-radius:10px;text-decoration:none;font-weight:700}
+  .m{color:#778;font-size:13px}
+</style>
+</head>
+<body>
+<div class="c">
+  <div style="font-size:40px">🐾</div>
+  <h2 style="color:#0b5394;margin:6px 0">ระบบรายงาน Pet Shop</h2>
+  <div class="m" id="msg">กำลังเปิดระบบ...</div>
+  <a id="go" href="#">เปิดระบบ</a>
+</div>
+<script>
+  // ▼▼▼ วางลิงก์เว็บแอป (ลงท้าย /exec) ของคุณระหว่างเครื่องหมาย ' ' ▼▼▼
+  var WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxxMZM-qrj3RigIB2vmIZ08eaApZb3AsUn4i4YcnKmSiGAtfNtUuCS8XIOLNyd09trQ/exec';
+  // ▲▲▲ เปลี่ยนแค่บรรทัดบนเท่านั้น ▲▲▲
+
+  var go = document.getElementById('go');
+  if (!/^https:\/\/script\.google\.com\/.+\/exec$/.test(WEBAPP_URL)) {
+    document.getElementById('msg').textContent = 'ยังไม่ได้ตั้งลิงก์ — แก้ไฟล์ index.html บรรทัด WEBAPP_URL';
+    go.style.display = 'none';
+  } else {
+    var target = WEBAPP_URL + location.search;   // ส่งต่อ ?page=cab&cab=C01 ฯลฯ (QR ตู้)
+    go.href = target;
+    location.replace(target);
+  }
+</script>
+</body>
+</html>

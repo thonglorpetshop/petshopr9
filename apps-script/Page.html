@@ -1,0 +1,1740 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+<style id="fontcss"></style>
+<style>
+  :root{--f:'Thonglor','Sarabun',sans-serif;--blue:#1a3fd6;--red:#d60000;--pink:#e0219b;--cyan:#00e5ff;--line:#222;--bg:#eef1f5;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);font-family:var(--f);color:#111;font-size:14px}
+  #top{position:sticky;top:0;z-index:12;height:54px;background:#0b5394;color:#fff;display:flex;align-items:center;gap:8px;padding:0 10px;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+  #top .hb{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:8px;padding:7px 11px;font:inherit;font-weight:600;cursor:pointer;white-space:nowrap}
+  #top .hb.pri{background:#ffd54f;color:#0b3d6e;border-color:#ffd54f}
+  #pageTitle{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #menuBtn{font-size:20px;padding:4px 10px}
+  nav{position:fixed;top:54px;left:0;bottom:0;width:236px;background:#fff;border-right:1px solid #dde3ea;overflow-y:auto;z-index:11;padding:10px 8px 30px;transition:transform .2s}
+  nav .grp{font-size:12px;font-weight:700;color:#8a96a6;margin:14px 10px 4px;letter-spacing:.3px}
+  nav button{display:block;width:100%;text-align:left;background:transparent;color:#24364d;border:0;padding:9px 12px;border-radius:8px;font:inherit;font-weight:600;cursor:pointer}
+  nav button:hover{background:#eef3fa}
+  nav button.on{background:#0b5394;color:#fff}
+  nav button.home{background:#fff7d6;color:#7a5a00;border:1px solid #ffe08a;margin-bottom:4px}
+  nav button.home.on{background:#ffd54f;color:#0b3d6e}
+  #scrim{display:none;position:fixed;inset:54px 0 0 0;background:rgba(0,0,0,.35);z-index:10}
+  main{padding:14px;max-width:1500px;margin:0 auto 0 236px}
+  @media (max-width:1100px){ nav{transform:translateX(-100%)} body.dr nav{transform:none} body.dr #scrim{display:block} main{margin-left:0} }
+  @media (min-width:1101px){ #menuBtn{display:none} }
+  @media (max-width:640px){ #top .hb .tx{display:none} }
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+  .bar label{font-weight:600}
+  input,select{font:inherit;padding:6px 8px;border:1px solid #b9c1cc;border-radius:6px;background:#fff}
+  .btn{font:inherit;font-weight:600;padding:7px 14px;border:0;border-radius:6px;background:#0b5394;color:#fff;cursor:pointer}
+  .btn.alt{background:#fff;color:#0b5394;border:1px solid #0b5394}
+  .btn.green{background:#06c755}
+  .btn:disabled{opacity:.5}
+  .muted{color:#667;font-size:12px}
+  .scroll{overflow-x:auto;padding-bottom:6px}
+  .paper{background:#fff;width:760px;padding:18px;margin:0 auto}
+  table.r{border-collapse:collapse;width:100%;table-layout:fixed}
+  table.r td,table.r th{border:1px solid var(--line);padding:3px 5px;text-align:center;vertical-align:middle;font-size:12px}
+  table.r th{font-weight:700}
+  .title{font-size:16px;font-weight:700}
+  .date{color:var(--pink);font-size:16px;font-weight:700}
+  .big{font-size:15px;font-weight:700}
+  .b{color:var(--blue)} .rd{color:var(--red)} .l{text-align:left!important}
+  .sec{display:inline-block;background:var(--cyan);font-weight:700;padding:2px 8px;margin-top:14px;min-width:220px}
+  .sec .date{margin-left:20px;font-size:14px}
+  table.list{border-collapse:collapse;width:100%;border:1px solid var(--line);table-layout:fixed}
+  table.list td,table.list th{padding:2px 5px;font-size:11.5px;text-align:left;vertical-align:top;border-bottom:1px dotted #ccc}
+  table.list th{background:#f3f3f3;border-bottom:1px solid var(--line)}
+  table.list .num{text-align:right}
+  table.list.auto{table-layout:auto} table.list.auto td{vertical-align:middle}
+  table.mx td{border-left:1px dotted #ddd}
+  table.wk td,table.wk th{padding:8px 6px}
+  tr.more{display:none} .open tr.more{display:table-row}
+  .toggle{display:block;margin:4px auto 0;font:inherit;font-size:12px;background:none;border:0;color:#0b5394;cursor:pointer;text-decoration:underline}
+  .empty{padding:14px;text-align:center;color:#888}
+  .tot td{font-weight:700;background:#fafafa}
+  .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .drop{border:2px dashed #8aa4c8;border-radius:10px;padding:34px;text-align:center;background:#f7faff;cursor:pointer}
+  .drop.hover{background:#e3eeff}
+  .log div{padding:6px 0;border-bottom:1px solid #eee}
+  .stgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .stc{border-radius:10px;padding:12px;border:1px solid #e3e7ee;background:#fafbfd}
+  .stc b{display:block;margin-bottom:4px} .stc.ok{background:#eafaf0;border-color:#9fe0b5} .stc.no{background:#fff4f4;border-color:#f5c2c2}
+  .stc .muted{font-size:12px}
+  .ok{color:#0a7a2f}.err{color:#c00}
+  table.edit{border-collapse:collapse;width:100%}
+  table.edit th,table.edit td{border:1px solid #d5dbe3;padding:4px;font-size:13px}
+  table.edit th{background:#f1f4f8}
+  table.edit input{width:100%;padding:4px}
+  table.edit input.n{text-align:right;min-width:52px}
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:20;padding:16px}
+  .ov .box{background:#fff;border-radius:10px;max-width:96vw;max-height:94vh;overflow:auto;padding:12px;text-align:center}
+  .ov img{max-width:100%;border:1px solid #ddd}
+  .kpi td.k{width:42%;text-align:left!important;font-weight:600}
+  textarea{width:100%;font:inherit;font-size:13px}
+  #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:8px 16px;border-radius:20px;display:none;z-index:30}
+  .md{position:fixed;inset:0;background:rgba(10,30,60,.55);display:none;align-items:center;justify-content:center;z-index:40;padding:16px}
+  .md.on{display:flex}
+  .md .bx{background:#fff;border-radius:16px;width:100%;max-width:380px;max-height:92vh;overflow:auto;padding:26px 26px 22px;box-shadow:0 20px 50px rgba(0,0,0,.25);text-align:center}
+  .md .ic{width:56px;height:56px;border-radius:50%;background:#e8f0fb;color:#0b5394;font-size:26px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px}
+  .md h3{margin:0 0 4px;font-size:20px;color:#0b5394}
+  .md p{margin:0 0 16px;color:#667;font-size:13px}
+  .md .f{position:relative;margin-bottom:8px;text-align:left}
+  .md .f label{display:block;font-size:12px;color:#556;margin:8px 0 3px}
+  .md .f input{width:100%;padding:11px 12px;font-size:16px;border:1.5px solid #c5cfdc;border-radius:10px}
+  .md .f input:focus{outline:none;border-color:#0b5394;box-shadow:0 0 0 3px #d6e4f7}
+  .md .eye{position:absolute;right:8px;bottom:7px;border:0;background:none;cursor:pointer;font-size:18px;color:#778}
+  .md .er{color:#c00;font-size:13px;min-height:18px;margin:4px 0 6px}
+  .md .act{display:flex;gap:8px;margin-top:6px}
+  .md .act .btn{flex:1;padding:11px;font-size:15px;border-radius:10px}
+  .md .shake{animation:sh .35s}
+  @keyframes sh{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+</style>
+</head>
+<body>
+<header id="top">
+  <button class="hb" id="menuBtn" onclick="toggleDrawer()">☰</button>
+  <span id="pageTitle">ระบบรายงาน Pet Shop</span>
+  <span style="flex:1"></span>
+  <button class="hb pri" onclick="show('upload')">📥<span class="tx"> นำเข้าไฟล์</span></button>
+  <button class="hb" onclick="refreshData()" title="โหลดข้อมูลล่าสุด">🔄<span class="tx"> รีเฟรช</span></button>
+  <button class="hb" id="admBtn" onclick="openUserMenu()">👤</button>
+</header>
+<nav id="nav">
+  <div class="grp">📥 นำเข้าข้อมูล</div>
+  <button data-t="upload" class="home">นำเข้าไฟล์ (หน้าแรก)</button>
+  <button data-t="grab">Grab Stock</button>
+  <div class="grp">📅 นัดหมาย</div>
+  <button data-t="appt">รายงานนัดหมายรายวัน</button>
+  <button data-t="month">นัดหมายรายเดือน</button>
+  <button data-t="noappt">ซื้อแต่ไม่มีนัด</button>
+  <div class="grp">💰 ยอดขาย</div>
+  <button data-t="daily">สรุปประจำวัน</button>
+  <button data-t="weekly">รายสัปดาห์ (Trend)</button>
+  <button data-t="sameday">ตรวจยอด Grab / LINE MAN</button>
+  <div class="grp">📦 สต็อกสินค้า</div>
+  <button data-t="purchase">รายงานสั่งซื้อ</button>
+  <button data-t="cabs">ตู้เก็บสินค้า / เติมของ</button>
+  <div class="grp adm" hidden>👑 หัวหน้างาน</div>
+  <button data-t="roster" class="adm" hidden>ตารางเวร</button>
+  <button data-t="staff" class="adm" hidden>พนักงาน</button>
+  <button data-t="target" class="adm" hidden>Target</button>
+  <button data-t="users" class="adm" hidden>ผู้ใช้งาน</button>
+</nav>
+<div id="scrim" onclick="toggleDrawer(false)"></div>
+<main>
+  <!-- ===== รายงานนัดหมาย ===== -->
+  <section id="t-appt" hidden>
+    <div class="bar">
+      <label>วันที่</label><input type="date" id="apptDate">
+      <button class="btn" onclick="loadAppt()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('apptPaper','นัดหมาย')">บันทึกเป็นรูป</button>
+      <span class="muted" id="apptInfo"></span>
+    </div>
+    <div class="scroll"><div class="paper" id="apptPaper"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== นัดหมายรายเดือน ===== -->
+  <section id="t-month" hidden>
+    <div class="bar">
+      <label>วันที่นัด ตั้งแต่เดือน</label><input type="month" id="amMonth" onchange="if($('amTo').value<this.value)$('amTo').value=this.value;loadMonth()"> <label>ถึงเดือน</label><input type="month" id="amTo" onchange="loadMonth()">
+      <button class="btn" onclick="loadMonth()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('monthPaper','นัดหมายรายเดือน')">บันทึกเป็นรูป</button>
+      <button class="btn alt" onclick="dlMonth()">ดาวน์โหลด CSV</button>
+    </div>
+    <div class="bar">
+      <label>วันที่นัด</label><select id="fDay" onchange="renderMonth()"></select>
+      <label>พนักงาน</label><select id="fStaff" onchange="renderMonth()"></select>
+      <label>Follow</label><select id="fFollow" onchange="renderMonth()"><option value="">ทั้งหมด</option><option>Y</option><option>N</option></select>
+      <input id="fText" placeholder="ค้นหา HN / ชื่อ / สัตว์ / รายการ" oninput="renderMonth()" style="min-width:240px">
+    </div>
+    <div class="scroll"><div class="paper" id="monthPaper" style="width:900px"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== สรุปประจำวัน ===== -->
+  <section id="t-daily" hidden>
+    <div class="bar">
+      <label>วันที่ขาย</label><input type="date" id="saleDate">
+      <label>วันที่นัด (ปิ่นโต)</label><input type="date" id="pintoDate">
+      <button class="btn" onclick="loadDaily()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('dailyPaper','ประจำวัน')">บันทึกเป็นรูป</button>
+      <button class="btn alt" onclick="copyDaily()">คัดลอกข้อความไป LINE</button>
+    </div>
+    <div class="card" id="manualBox" hidden>
+      <b>3. เคสสั่งซื้อผ่าน โทร / LINE</b> (เจ้าหน้าที่กรอกเอง)<br><br>
+      จำนวน <input type="number" id="mCount" style="width:90px"> เคส &nbsp;
+      จำนวนเงิน <input type="number" id="mAmt" style="width:130px"> บาท &nbsp;
+      <button class="btn" onclick="saveManual()">บันทึก</button>
+    </div>
+    <div class="scroll"><div class="paper" id="dailyPaper"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== ซื้อแต่ไม่มีนัด ===== -->
+  <section id="t-noappt" hidden>
+    <div class="bar">
+      <label>วันที่ซื้อ</label><input type="date" id="naStart"> <label>ถึง</label><input type="date" id="naEnd">
+      <label>ยอดต่อบิล ≥</label><input type="number" id="naMin" value="0" style="width:100px"> บาท
+      <button class="btn" onclick="loadNoAppt()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('naPaper','ซื้อแต่ไม่มีนัด')">บันทึกเป็นรูป</button>
+      <button class="btn alt" onclick="dlNoAppt()">ดาวน์โหลด CSV</button>
+    </div>
+    <div class="bar"><label>กลุ่มสินค้า</label><span id="naGroups"></span></div>
+    <div class="bar">
+      <label>แสดง</label><select id="naShow" onchange="renderNoAppt()"><option value="no">ยังไม่มีนัด</option><option value="missing">ซื้อประจำแต่เดือนล่าสุดยังไม่ซื้อ</option><option value="yes">มีนัดแล้ว</option><option value="">ทั้งหมด</option></select>
+      <label>การติดตาม</label><select id="naFol" onchange="renderNoAppt()"><option value="">ทั้งหมด</option><option value="none">ยังไม่ติดตาม</option><option value="due">ถึงวันโทรซ้ำ / วันมารับ</option><option value="open">ติดตามแล้ว (ยังไม่จบ)</option><option value="done">จบแล้ว (ทำนัด ImedX / มารับ / ไม่ต้องการ)</option></select>
+      <input id="naText" placeholder="ค้นหาชื่อ / HN / สินค้า" oninput="renderNoAppt()" style="min-width:240px">
+    </div>
+    <div class="scroll"><div class="paper" id="naPaper" style="width:900px"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== รายสัปดาห์ ===== -->
+  <section id="t-weekly" hidden>
+    <div class="bar">
+      <label>เดือน</label><input type="month" id="weekMonth">
+      <button class="btn" onclick="loadWeekly()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('weeklyPaper','รายสัปดาห์')">บันทึกเป็นรูป</button>
+    </div>
+    <div class="scroll"><div class="paper" id="weeklyPaper" style="width:900px"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== ตรวจยอด Grab / LINE MAN ===== -->
+  <section id="t-sameday" hidden>
+    <div class="bar">
+      <label>วันที่</label><input type="date" id="sdDate" onchange="loadSameday()">
+      <label>พนักงานขาย</label><select id="sdSeller" onchange="loadSameday()"><option value="">ทั้งหมด</option></select>
+      <button class="btn" onclick="loadSameday()">ดึงรายงาน</button>
+      <button class="btn green" onclick="capture('sdPaper','Sameday')">บันทึกเป็นรูป</button>
+      <button class="btn alt" onclick="checkAllSd(true)">ติ๊กทั้งหมด</button>
+      <button class="btn alt" onclick="checkAllSd(false)">ล้างติ๊ก</button>
+    </div>
+    <div class="scroll"><div class="paper" id="sdPaper" style="width:1000px"><div class="empty">กด "ดึงรายงาน"</div></div></div>
+  </section>
+
+  <!-- ===== นำเข้าไฟล์ ===== -->
+  <section id="t-upload" hidden>
+    <div class="card">
+      <div class="drop" id="drop">
+        <div style="font-size:18px;font-weight:700">ลากไฟล์ CSV มาวางที่นี่ หรือกดเพื่อเลือกไฟล์</div>
+        <div class="muted" style="margin-top:6px">เลือกได้หลายไฟล์พร้อมกัน ระบบแยกประเภทให้เอง:
+          TLP_01_01 (นัดหมาย) · TLPH-DATA (POS) · TLP_05_15 (ImedX) · TLP_14_09 (STOCK) · TLP_18_05 (Master/Barcode)<br>ระบบเก็บเฉพาะสินค้า Pet shop (2-, A01–A17) รหัสฝั่งโรงพยาบาลตัดทิ้งอัตโนมัติ</div>
+        <input type="file" id="file" accept=".csv,text/csv" multiple hidden>
+      </div>
+      <div class="log" id="uplog" style="margin-top:12px"></div>
+    </div>
+    <div class="card"><div class="bar" style="justify-content:space-between"><b style="font-size:16px">สถานะข้อมูลในระบบ</b><span class="muted">สีเขียว = นำเข้าวันนี้แล้ว</span></div><div id="lastImp" class="stgrid">-</div></div>
+  </section>
+
+  <!-- ===== Grab Stock ===== -->
+  <section id="t-grab" hidden>
+    <div class="card">
+      <div class="drop" id="gdrop">
+        <div style="font-size:18px;font-weight:700">วางไฟล์ STOCK (TLP_14_09) + ไฟล์ Grab ที่นี่ พร้อมกันได้</div>
+        <div class="muted" style="margin-top:6px">ระบบนำเข้า STOCK ก่อน แล้วเติม CURRENTSTOCK / MAXSTOCK / สถานะ ลงไฟล์ Grab ให้ดาวน์โหลดกลับไปอัปโหลดที่ Grab<br>
+          ถ้านำเข้า STOCK วันนี้แล้ว วางแค่ไฟล์ Grab ก็พอ</div>
+        <input type="file" id="gfile" accept=".csv,text/csv" multiple hidden>
+      </div>
+      <div class="log" id="glog" style="margin-top:12px"></div>
+    </div>
+    <div class="card">
+      <div class="bar" style="justify-content:space-between"><b style="font-size:16px">สินค้าเคลม (หักออกจาก STOCK ก่อนส่ง Grab)</b>
+        <span><button class="btn alt" onclick="addClaim()">+ เพิ่มรายการ</button> <button class="btn" onclick="saveClaimsUI(this)">บันทึกรายการเคลม</button></span></div>
+      <div class="muted" style="margin-bottom:8px">สินค้าที่ส่งเคลมแต่ยังมีตัวเลขในระบบ ใส่รหัสและจำนวน แล้วกดบันทึก — ไฟล์ Grab ที่สร้างหลังจากนี้จะหักจำนวนนี้ออก (ถ้าติดลบปรับเป็น 0) · เคลมเสร็จแล้วให้ลบรายการออก</div>
+      <div class="scroll"><table class="edit" id="claimTbl"></table></div>
+      <div class="muted" id="claimInfo" style="margin-top:6px"></div>
+    </div>
+    <div id="gres"></div>
+  </section>
+
+  <!-- ===== รายงานสั่งซื้อ ===== -->
+  <section id="t-purchase" hidden>
+    <div class="bar">
+      <label>ยอดขายย้อนหลัง</label><select id="pDays"><option>30</option><option>60</option><option>90</option></select> วัน
+      <label>ต้องมีของพอขาย</label><input type="number" id="pCover" value="14" style="width:70px"> วัน
+      <button class="btn" onclick="loadPurchase()">ดึงรายงาน</button>
+      <button class="btn green" onclick="dlPurchase()">⬇ Excel ใบสั่งซื้อ</button>
+      <button class="btn alt adm" hidden onclick="openPurCfg()">⚙ ผู้ดูแลหมวด / ชื่อบริษัท</button>
+    </div>
+    <div class="bar">
+      <label>หมวด</label><select id="pCat" onchange="renderPurchase()"></select>
+      <label>ผู้ดูแล</label><select id="pOwner" onchange="renderPurchase()"></select>
+      <label>สถานะ</label><select id="pStat" onchange="renderPurchase()"><option value="need">ต้องสั่ง (หมด + ใกล้หมด)</option><option value="หมด">หมด</option><option value="ใกล้หมด">ใกล้หมด</option><option value="">ทั้งหมด</option></select>
+      <label>การสั่ง</label><select id="pOrd" onchange="renderPurchase()"><option value="">ทั้งหมด</option><option value="no">ยังไม่สั่ง</option><option value="yes">สั่งแล้ว</option></select>
+      <input id="pText" placeholder="ค้นหา บริษัท / รหัส / สินค้า" oninput="renderPurchase()" style="min-width:220px">
+    </div>
+    <div id="pCfg" class="card" hidden></div>
+    <div id="pOut"><div class="empty">กำลังโหลด...</div></div>
+  </section>
+
+  <!-- ===== ตู้เก็บสินค้า ===== -->
+  <section id="t-cabs" hidden>
+    <div class="bar" id="cSub">
+      <button class="btn" data-v="list" onclick="cabView('list')">🗄 ตู้ทั้งหมด</button>
+      <button class="btn alt" data-v="refill" onclick="cabView('refill')">🛒 แผนเติมของ (เวรบ่าย)</button>
+      <button class="btn alt" data-v="shelf" onclick="cabView('shelf')">🏷 หน้าเชลฟ์</button>
+      <button class="btn alt" data-v="qr" onclick="cabView('qr')">🔳 พิมพ์ QR ตู้</button>
+      <span style="flex:1"></span>
+      <button class="btn green" onclick="capture('cOut','ตู้เก็บสินค้า')">บันทึกเป็นรูป</button>
+    </div>
+    <div id="cOut"><div class="empty">กำลังโหลด...</div></div>
+  </section>
+
+  <!-- ===== ตารางเวร ===== -->
+  <section id="t-roster" hidden>
+    <div class="bar">
+      <label>เดือน</label><input type="month" id="rMonth" onchange="loadRoster()">
+      <button class="btn" onclick="saveRosterUI(this)">💾 บันทึกตารางเวร</button>
+      <span class="muted" id="rInfo"></span>
+    </div>
+    <div class="bar" id="rSub">
+      <button class="btn" data-v="main" onclick="rView('main')">ตารางหลัก</button>
+      <button class="btn alt" data-v="help" onclick="rView('help')">ตารางช่วยคนลา</button>
+      <button class="btn alt" data-v="hr" onclick="rView('hr')">รายงานส่ง HR</button>
+      <span style="flex:1"></span>
+      <button class="btn green" onclick="capture('rPaper','ตารางเวร')">บันทึกเป็นรูป</button>
+      <button class="btn green" onclick="rExcel()">⬇ ดาวน์โหลด Excel</button>
+    </div>
+    <div class="card" id="rTools"></div>
+    <div class="scroll"><div class="paper" id="rPaper" style="width:auto;min-width:900px"><div class="empty">กำลังโหลด...</div></div></div>
+    <datalist id="shiftOpts"></datalist>
+  </section>
+
+  <!-- ===== ผู้ใช้งาน ===== -->
+  <section id="t-users" hidden>
+    <div class="card">
+      <div class="bar" style="justify-content:space-between"><b style="font-size:16px">ผู้ใช้งานระบบ</b>
+        <span><button class="btn alt" onclick="pullUsers()">ดึงจากรายชื่อพนักงาน</button> <button class="btn alt" onclick="addUser()">+ เพิ่มผู้ใช้</button> <button class="btn" onclick="saveUsersUI(this)">บันทึก</button></span></div>
+      <div class="muted" style="margin-bottom:8px">Username = รหัสพนักงาน · ผู้ใช้ใหม่และการรีเซ็ต ใช้รหัสผ่าน = รหัสพนักงาน (เปลี่ยนเองได้ที่เมนู 👤) · "หัวหน้างาน" เห็นแท็บ ตารางเวร / พนักงาน / Target / ผู้ใช้งาน · เอาติ๊ก "ใช้งาน" ออก = ล็อกอินไม่ได้ · บัญชี <b>admin</b> เป็นบัญชีหัวหน้างานของระบบ ไม่ต้องเพิ่มในตารางนี้</div>
+      <div class="scroll"><table class="edit" id="userTbl"></table></div>
+      <div class="err" id="userHint" style="margin-top:6px"></div>
+    </div>
+  </section>
+
+  <!-- ===== พนักงาน ===== -->
+  <section id="t-staff" hidden>
+    <div class="card">
+      <div class="bar"><b style="font-size:16px">รายชื่อพนักงาน และรหัสที่ใช้จับใน Note</b></div>
+      <div class="muted" style="margin-bottom:8px">รหัส (#) ใช้จับนัดหมาย เช่น AM → นับนัดที่ Note มี <b>#AM</b> (คนช่วย/คนนอกแผนกเว้นว่างได้) · ติ๊ก "ตารางเวร" = แสดงในตารางหลัก · ติ๊ก "HR" = อยู่ในรายงานส่ง HR</div>
+      <div class="scroll"><table class="edit" id="staffTbl"></table></div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn alt" onclick="addStaff()">+ เพิ่มพนักงาน</button>
+        <button class="btn" onclick="saveStaffUI(this)">บันทึก</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Target ===== -->
+  <section id="t-target" hidden>
+    <div class="card">
+      <div class="bar"><b style="font-size:16px">Target ทั้งปี</b>
+        <label>ปี (ค.ศ.)</label><input type="number" id="tYear" style="width:90px">
+        <button class="btn alt" onclick="loadTarget()">โหลด</button>
+      </div>
+      <div class="muted" style="margin-bottom:8px">นัดหมายรายคน = จำนวนนัดต่อเดือน (นับจากวันที่นัด) · Target/วัน = จำนวนนัดที่ต้องสร้างต่อวัน ·
+        ปุ่ม → คัดลอกค่าเดือน ม.ค. ไปทุกเดือน</div>
+      <div class="scroll"><table class="edit" id="tgtTbl"></table></div>
+      <div class="bar" style="margin-top:10px">
+        <button class="btn" onclick="saveTargetUI(this)">บันทึก Target</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="ov" id="ov" onclick="if(event.target===this)this.style.display='none'">
+  <div class="box">
+    <div style="margin-bottom:8px"><b>กดค้างที่รูป (มือถือ) หรือคลิกขวา (คอม) เพื่อบันทึก/คัดลอก แล้วส่งลงกลุ่ม LINE</b></div>
+    <img id="ovImg"><br>
+    <a class="btn" id="ovDl" download="report.png" style="display:inline-block;margin-top:8px;text-decoration:none">ดาวน์โหลดรูป</a>
+    <button class="btn alt" onclick="document.getElementById('ov').style.display='none'">ปิด</button>
+  </div>
+</div>
+<div class="md on" id="loginMd" style="background:linear-gradient(135deg,#0b5394,#3d85c6)">
+  <div class="bx" id="loginBx">
+    <div class="ic">🐾</div>
+    <h3>ระบบรายงาน Pet Shop</h3>
+    <p>เข้าสู่ระบบด้วยรหัสพนักงาน</p>
+    <div class="f"><label>Username</label><input id="lgUser" placeholder="รหัสพนักงาน" autocomplete="username" onkeydown="if(event.key==='Enter')$('lgPass').focus()"></div>
+    <div class="f"><label>รหัสผ่าน</label><input type="password" id="lgPass" placeholder="รหัสผ่าน" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+      <button class="eye" type="button" onclick="var i=$('lgPass');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈'">👁</button></div>
+    <div class="er" id="lgEr"></div>
+    <div class="act"><button class="btn" id="lgGo" onclick="doLogin()">เข้าสู่ระบบ</button></div>
+    <p style="margin:12px 0 0;font-size:12px">ครั้งแรกใช้รหัสผ่าน = รหัสพนักงาน</p>
+  </div>
+</div>
+<div class="md" id="menuMd" onclick="if(event.target===this)closeMd('menuMd')">
+  <div class="bx">
+    <div class="ic">👤</div>
+    <h3 id="muName"></h3>
+    <p id="muRole"></p>
+    <div class="act" style="flex-direction:column">
+      <button class="btn alt" onclick="closeMd('menuMd');openPw()">🔑 เปลี่ยนรหัสผ่าน</button>
+      <button class="btn" style="background:#c0392b" onclick="doLogout()">ออกจากระบบ</button>
+      <button class="btn alt" onclick="closeMd('menuMd')">ปิด</button>
+    </div>
+  </div>
+</div>
+<div class="md" id="pwMd" onclick="if(event.target===this)closeMd('pwMd')">
+  <div class="bx">
+    <div class="ic">🔑</div>
+    <h3>เปลี่ยนรหัสผ่าน</h3>
+    <p id="pwNote">ตั้งรหัสใหม่อย่างน้อย 4 ตัว</p>
+    <div class="f"><label>รหัสผ่านเดิม</label><input type="password" id="pwOld"></div>
+    <div class="f"><label>รหัสผ่านใหม่</label><input type="password" id="pwNew"></div>
+    <div class="f"><label>ยืนยันรหัสผ่านใหม่</label><input type="password" id="pwNew2" onkeydown="if(event.key==='Enter')doChangePw()"></div>
+    <div class="er" id="pwEr"></div>
+    <div class="act"><button class="btn alt" onclick="closeMd('pwMd')">ภายหลัง</button><button class="btn" onclick="doChangePw()">บันทึก</button></div>
+  </div>
+</div>
+<div class="md" id="extMd" onclick="if(event.target===this)closeMd('extMd')">
+  <div class="bx">
+    <div class="ic">👤</div>
+    <h3>เพิ่มคนช่วย / คนนอก</h3>
+    <p>คนที่มาช่วยตอนมีคนลา (ไม่ต้องอยู่ในรายชื่อพนักงาน)</p>
+    <div class="f"><label>ชื่อ-สกุล *</label><input id="exName" placeholder="ทรงยศ ดาษดา"></div>
+    <div class="f"><label>ชื่อเล่น / หัวคอลัมน์</label><input id="exEn" placeholder="JAB(R8)"></div>
+    <div class="f"><label>รหัสพนักงาน</label><input id="exEmp" placeholder="5069"></div>
+    <div class="f"><label>เบอร์โทร</label><input id="exPh" placeholder="080-xxxxxxx"></div>
+    <div class="er" id="exEr"></div>
+    <div class="act"><button class="btn alt" onclick="closeMd('extMd')">ยกเลิก</button><button class="btn" onclick="submitExt()">เพิ่ม</button></div>
+  </div>
+</div>
+<div class="md" id="cabMd" onclick="if(event.target===this)closeMd('cabMd')">
+  <div class="bx" style="max-width:440px">
+    <div class="ic">🗄</div><h3 id="cabMdT">เพิ่มตู้</h3>
+    <div class="f"><label>รหัสตู้ (ว่าง = ตั้งให้อัตโนมัติ)</label><input id="cbId" placeholder="C01"></div>
+    <div class="f"><label>ชื่อตู้ *</label><input id="cbName" placeholder="ตู้ 1 อาหารแมว"></div>
+    <div class="f"><label>ที่ตั้ง</label><input id="cbLoc" placeholder="หลังเคาน์เตอร์ ชั้น 1"></div>
+    <div class="f"><label>รูปตู้ (ลิงก์)</label><input id="cbPhoto" placeholder="กดปุ่มอัปโหลด หรือวางลิงก์รูป"></div>
+    <button class="btn alt" style="width:100%" onclick="pickImage(function(u){ $('cbPhoto').value=u; })">📷 ถ่าย / อัปโหลดรูปตู้</button>
+    <div class="f"><label>หมายเหตุ</label><input id="cbNote"></div>
+    <div class="er" id="cbEr"></div>
+    <div class="act"><button class="btn alt" onclick="closeMd('cabMd')">ยกเลิก</button><button class="btn" onclick="saveCabUI()">บันทึก</button></div>
+  </div>
+</div>
+<div class="md" id="camMd">
+  <div class="bx" style="max-width:480px">
+    <h3>สแกน Barcode</h3>
+    <div id="camReader" style="width:100%;min-height:60px"></div>
+    <div class="er" id="camEr"></div>
+    <label class="btn alt" style="display:block;margin:8px 0">📸 ถ่ายรูป Barcode แทน<input type="file" accept="image/*" capture="environment" hidden onchange="scanFile(this)"></label>
+    <div class="act"><button class="btn alt" onclick="stopCam()">ปิด</button></div>
+  </div>
+</div>
+<div class="md" id="folMd" onclick="if(event.target===this)closeMd('folMd')">
+  <div class="bx" style="max-width:480px;text-align:left">
+    <div class="ic">📞</div>
+    <h3 id="folName" style="text-align:center"></h3>
+    <p id="folSub" style="text-align:center"></p>
+    <div class="f"><label>สถานะ *</label><div id="folSt" style="display:flex;flex-wrap:wrap;gap:6px"></div></div>
+    <div class="f" id="folDateBox"><label id="folDateLbl">วันที่</label><input type="date" id="folDate"></div>
+    <div class="f"><label>หมายเหตุ</label><input id="folNote" placeholder="เช่น ลูกค้าจะมารับเย็นนี้ / ขอเลื่อนเพราะยังมีของ"></div>
+    <div class="er" id="folEr"></div>
+    <div class="act"><button class="btn alt" onclick="closeMd('folMd')">ปิด</button><button class="btn" id="folGo" onclick="saveFol()">บันทึกการติดตาม</button></div>
+    <div id="folHist" style="margin-top:14px"></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.6/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<script>
+var START_TAB = '<?= startTab ?>', CAB_ID = '<?= cabId ?>';
+var MONTHS = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+var $ = function(id){ return document.getElementById(id); };
+var state = {};
+
+var RAW={login:1,whoami:1,logout:1,getFontCss:1};
+function run(fn){ var args = [].slice.call(arguments,1);
+  return new Promise(function(ok, bad){
+    var g=google.script.run.withSuccessHandler(ok).withFailureHandler(function(e){
+      if(e && /SESSION_EXPIRED|กรุณาเข้าสู่ระบบ/.test(e.message||e)){ showLogin('หมดเวลาการใช้งาน กรุณาเข้าสู่ระบบใหม่'); }
+      bad(e);
+    });
+    if(RAW[fn]) g[fn].apply(null, args); else g.api(state.token||'', fn, args);
+  }); }
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function n0(x){ return Number(x||0).toLocaleString('th-TH',{maximumFractionDigits:0}); }
+function n2(x){ return Number(x||0).toLocaleString('th-TH',{minimumFractionDigits:0,maximumFractionDigits:2}); }
+function pc(x){ return (Number(x||0)*100).toFixed(2)+'%'; }
+function today(){ return new Date(Date.now()+7*3600000).toISOString().slice(0,10); } // เวลาไทย
+function toast(t){ var e=$('toast'); e.textContent=t; e.style.display='block'; clearTimeout(e._t); e._t=setTimeout(function(){e.style.display='none';},2500); }
+function fail(el){ return function(e){ (el?el:$('toast')).innerHTML='<div class="empty err">ผิดพลาด: '+esc(e && e.message || e)+'</div>'; if(!el) toast('ผิดพลาด: '+(e.message||e)); }; }
+function loading(el){ el.innerHTML='<div class="empty">กำลังโหลด...</div>'; }
+
+/* ---------- แท็บ ---------- */
+var ADM={roster:1,staff:1,target:1,users:1};
+function toggleDrawer(on){ document.body.classList.toggle('dr', on===undefined?!document.body.classList.contains('dr'):on); }
+var CACHED=['appt','month','daily','weekly','sameday','noappt','admin','claims','purchase','cabsData','refill','shelfList'];
+function clearCache(){ CACHED.forEach(function(k){ state[k]=null; }); if(!state.rDirty) state.roster=null; }
+function refreshData(){ clearCache(); toast('กำลังโหลดข้อมูลล่าสุด...'); if(state.cur) loadTab(state.cur); }
+function checkVersion(){
+  return run('getVersion').then(function(v){ var changed=!!state.ver && v!==state.ver; state.ver=v; if(changed){ clearCache(); toast('มีข้อมูลใหม่ — โหลดล่าสุดให้แล้ว'); } return changed; }).catch(function(){ return false; });
+}
+function show(t){
+  if(!state.token){ state.startTab=t; return; }
+  if(ADM[t] && !state.isAdmin){ toast('เฉพาะหัวหน้างาน'); t='upload'; }
+  state.cur=t;
+  document.querySelectorAll('section').forEach(function(s){ s.hidden = s.id !== 't-'+t; });
+  var cur=null;
+  document.querySelectorAll('nav button[data-t]').forEach(function(b){ var on=b.dataset.t===t; b.classList.toggle('on', on); if(on) cur=b; });
+  $('pageTitle').textContent=cur?cur.textContent.replace(' (หน้าแรก)',''):'ระบบรายงาน Pet Shop';
+  toggleDrawer(false); window.scrollTo(0,0);
+  loadTab(t);                                   // แสดงทันที (ใช้ข้อมูลที่โหลดไว้ถ้ามี)
+  checkVersion().then(function(ch){ if(ch && state.cur===t) loadTab(t); });   // ถ้ามีข้อมูลใหม่ค่อยโหลดซ้ำ
+}
+function loadTab(t){
+  if(t==='appt' && !state.appt) loadAppt();
+  if(t==='month' && !state.month) loadMonth();
+  if(t==='daily' && !state.daily) loadDaily();
+  if(t==='weekly' && !state.weekly) loadWeekly();
+  if(t==='sameday' && !state.sameday) loadSameday();
+  if(t==='noappt' && !state.noappt) loadNoAppt();
+  if(t==='users') loadUsers();
+  if((t==='staff' || t==='target') && !state.admin) loadTarget();
+  if(t==='roster' && !state.roster) loadRoster();
+  if(t==='upload') loadImports();
+  if(t==='grab' && !state.claims) loadClaims();
+  if(t==='purchase' && !state.purchase) loadPurchase();
+  if(t==='cabs') cabsEnter();
+}
+document.querySelectorAll('nav button[data-t]').forEach(function(b){ b.onclick=function(){ show(b.dataset.t); }; });
+
+/* ---------- ฟอนต์ ---------- */
+run('getFontCss').then(function(f){
+  if(f && f.css){ $('fontcss').textContent=f.css; document.documentElement.style.setProperty('--f',"'"+f.name+"','Sarabun',sans-serif"); }
+}).catch(function(){});
+
+/* ---------- พับรายการเกิน 10 ---------- */
+function listTable(id, head, rows, colw){
+  if(!rows.length) return '<table class="list"><tr><td class="empty">ไม่มีรายการ</td></tr></table>';
+  var h='<div id="'+id+'"><table class="list"><colgroup>'+colw.map(function(w){return '<col style="width:'+w+'">';}).join('')+'</colgroup><tr>'+
+    head.map(function(x){return '<th>'+x+'</th>';}).join('')+'</tr>';
+  rows.forEach(function(r,i){ h+='<tr'+(i>=10?' class="more"':'')+'>'+r.map(function(c){return '<td>'+c+'</td>';}).join('')+'</tr>'; });
+  h+='</table>';
+  if(rows.length>10) h+='<button class="toggle" onclick="var w=document.getElementById(\''+id+'\');w.classList.toggle(\'open\');this.textContent=w.classList.contains(\'open\')?\'หุบรายการ ▲\':\'ดูทั้งหมด '+rows.length+' รายการ ▼\'">ดูทั้งหมด '+rows.length+' รายการ ▼</button>';
+  return h+'</div>';
+}
+
+/* =============== รายงานนัดหมาย =============== */
+function loadAppt(){
+  var el=$('apptPaper'); loading(el);
+  run('getApptReport', $('apptDate').value).then(function(r){ state.appt=r; renderAppt(r); }).catch(fail(el));
+}
+function renderAppt(r){
+  var t=r.total;
+  var h='<table class="r"><colgroup><col style="width:17%"><col style="width:17%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"><col style="width:11%"></colgroup>'+
+  '<tr><td colspan="4" class="title">'+esc(r.title)+'</td><td colspan="4" class="date">'+r.dateText+'</td></tr>'+
+  '<tr><th>NO APP.</th><th>Target</th><th colspan="2">Achievement</th><th colspan="3">TOTAL MONTH</th><th class="rd">'+pc(t.monthPct)+'</th></tr>'+
+  '<tr><td class="big b">'+t.today+'</td><td class="big b">'+t.dayT+'</td><td colspan="2" class="big rd">'+pc(t.todayPct)+'</td>'+
+  '<td class="big b">เป้า</td><td class="big b">'+n0(t.monthT)+'</td><td class="big b">ทำได้</td><td class="big rd">'+t.month+'</td></tr>'+
+  '<tr><th colspan="2" class="l" style="height:40px">จำนวนนัดหมายรายคน</th><th>NO TODAY</th><th>% TODAY</th><th>NO MONTH</th><th>% MONTH</th><th>ต้องทำเพิ่มอีก<br>/ DAY</th><th>ต้องทำเพิ่มอีก<br>/ MONTH</th></tr>';
+  if(!r.rows.length) h+='<tr><td colspan="8" class="empty">ยังไม่มีรายชื่อพนักงาน — เพิ่มที่แท็บ "พนักงาน"</td></tr>';
+  r.rows.forEach(function(x){
+    h+='<tr><td colspan="2" class="l">'+esc(x.name)+' <span class="muted">#'+esc(x.code)+'</span></td><td class="rd">'+x.today+'</td><td class="rd">'+pc(x.todayPct)+'</td>'+
+       '<td class="b">'+x.month+'</td><td class="rd">'+pc(x.monthPct)+'</td><td class="b">'+x.remDay+'</td><td class="b">'+x.remMonth+'</td></tr>';
+  });
+  h+='<tr class="tot"><td colspan="2">รวม</td><td class="rd">'+t.today+'</td><td class="rd">'+pc(t.todayPct)+'</td><td class="b">'+t.month+'</td><td class="rd">'+pc(t.monthPct)+'</td><td class="b">'+t.remDay+'</td><td class="b">'+t.remMonth+'</td></tr></table>';
+
+  h+='<div class="sec">รายละเอียดนัดหมาย (สร้างวันนี้ '+r.created.length+' รายการ)</div>';
+  h+=listTable('lc',['เวลาสร้าง','HN','ชื่อ-สกุล','สัตว์เลี้ยง','วันที่นัด','รายการ','ผู้ทำนัด'],
+    r.created.map(function(x){ return [x.created, esc(x.hn), esc(x.name), esc(x.pet), x.appt+' '+esc(x.time), esc(x.note), esc(x.who)]; }),
+    ['8%','13%','17%','10%','12%','30%','10%']);
+
+  h+='<div class="sec">รายการเตรียมสินค้า วันพรุ่งนี้<span class="date">'+r.tomorrowText+'</span></div>';
+  h+=listTable('lp',['HN','ชื่อ-สกุล','สัตว์เลี้ยง','เวลา','รายการ','ผู้ทำนัด'],
+    r.prep.map(function(x){ return [esc(x.hn), esc(x.name), esc(x.pet), esc(x.time), esc(x.note), esc(x.who)]; }),
+    ['14%','20%','11%','7%','40%','8%']);
+  $('apptPaper').innerHTML=h;
+  $('apptInfo').textContent = r.imports.APPT ? 'ข้อมูลนัดหมายนำเข้าล่าสุด '+r.imports.APPT : 'ยังไม่ได้นำเข้าไฟล์นัดหมาย';
+}
+
+/* =============== นัดหมายรายเดือน =============== */
+function loadMonth(){
+  var el=$('monthPaper'); loading(el);
+  run('getApptMonth', $('amMonth').value, $('amTo').value).then(function(r){
+    state.month=r;
+    var days={}; r.rows.forEach(function(x){ days[x.d]=(days[x.d]||0)+1; });
+    $('fDay').innerHTML='<option value="">'+(r.months.length>1?'ทุกวัน':'ทั้งเดือน')+'</option>'+Object.keys(days).sort().map(function(d){ return '<option value="'+d+'">'+dText(d)+' ('+days[d]+')</option>'; }).join('');
+    $('fStaff').innerHTML='<option value="">ทั้งหมด</option>'+r.staff.map(function(s){ return '<option value="'+esc(s.code)+'">'+esc(s.nick)+' #'+esc(s.code)+'</option>'; }).join('')+'<option value="-">ไม่ระบุ</option>';
+    renderMonth();
+  }).catch(fail(el));
+}
+function dText(k){ var p=k.split('-'); return Number(p[2])+'/'+Number(p[1])+'/'+p[0]; }
+function monthFiltered(ignoreStaff){
+  var r=state.month, d=$('fDay').value, st=$('fStaff').value, fo=$('fFollow').value, q=$('fText').value.trim().toLowerCase();
+  return r.rows.filter(function(x){
+    if(d && x.d!==d) return false;
+    if(!ignoreStaff && st && (st==='-' ? x.code!=='' : x.code!==st)) return false;
+    if(fo && x.follow!==fo) return false;
+    if(q && (x.hn+' '+x.name+' '+x.pet+' '+x.note).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+function renderMonth(){
+  var r=state.month; if(!r) return;
+  var all=monthFiltered(true), rows=monthFiltered(false), d=$('fDay').value, M=r.months, multi=M.length>1;
+  var blank=M.map(function(){return 0;});
+  var sum={}; r.staff.concat([{code:'',name:'ไม่ระบุรหัส',nick:'ไม่ระบุ',target:0,tm:blank}]).forEach(function(s){ sum[s.code]={s:s,n:0,y:0,m:M.map(function(){return 0;})}; });
+  all.forEach(function(x){ var o=sum[x.code]||sum['']; o.n++; if(x.follow==='Y') o.y++; var mi=M.indexOf(x.d.slice(0,7)); if(mi>=0) o.m[mi]++; });
+  var keys=Object.keys(sum), tot={n:0,y:0,t:0,m:M.map(function(){return 0;}),tm:M.map(function(){return 0;})};
+  var mcell=function(n,t){ return '<td><span class="b big">'+n+'</span>'+(t&&!d?'<br><span class="muted" style="font-size:11px;white-space:nowrap">'+Math.round(n/t*100)+'% / '+n0(t)+'</span>':'')+'</td>'; };
+  var cols=6+(multi?M.length:0);
+  var h='<table class="r"><tr><td colspan="'+(cols-2)+'" class="title">'+esc(r.title)+'</td><td colspan="2" class="date">'+(d?'วันที่ '+dText(d):(multi?M.length+' เดือน':'ทั้งเดือน'))+'</td></tr>';
+  if(multi) h+='<tr><th rowspan="2" style="width:200px">พนักงาน</th><th colspan="'+M.length+'">นัดหมายแยกเดือน</th><th colspan="5">รวม '+M.length+' เดือน</th></tr><tr>'+r.monthLabels.map(function(l){ return '<th>'+l+'</th>'; }).join('')+'<th>เป้ารวม</th><th>นัดหมาย</th><th>% เป้า</th><th>Follow Y</th><th>Follow N</th></tr>';
+  else h+='<tr><th style="width:36%">พนักงาน</th><th>เป้าเดือน</th><th>นัดหมาย</th><th>% เป้า</th><th>Follow Y</th><th>Follow N</th></tr>';
+  keys.forEach(function(k){ var o=sum[k]; if(!k && !o.n) return; tot.n+=o.n; tot.y+=o.y; tot.t+=o.s.target;
+    o.m.forEach(function(v,i){ tot.m[i]+=v; tot.tm[i]+=(o.s.tm||blank)[i]||0; });
+    h+='<tr><td class="l">'+esc(o.s.name)+(k?' <span class="muted">#'+esc(k)+'</span>':'')+'</td>'+
+      (multi?o.m.map(function(v,i){ return mcell(v,(o.s.tm||blank)[i]); }).join(''):'')+
+      '<td class="b">'+(o.s.target?n0(o.s.target):'-')+'</td><td class="b big">'+o.n+'</td><td class="rd">'+(o.s.target&&!d?pc(o.n/o.s.target):'-')+'</td><td>'+o.y+'</td><td>'+(o.n-o.y)+'</td></tr>'; });
+  h+='<tr class="tot"><td>รวม</td>'+(multi?tot.m.map(function(v,i){ return mcell(v,tot.tm[i]); }).join(''):'')+
+    '<td class="b">'+(tot.t?n0(tot.t):'-')+'</td><td class="b big">'+tot.n+'</td><td class="rd">'+(tot.t&&!d?pc(tot.n/tot.t):'-')+'</td><td>'+tot.y+'</td><td>'+(tot.n-tot.y)+'</td></tr></table>';
+  $('monthPaper').style.width=multi?Math.max(900,560+M.length*78)+'px':'900px';
+  h+='<div class="sec">รายการนัดหมาย '+rows.length+' รายการ</div>';
+  h+=listTable('lm',['วันที่นัด','HN','ชื่อ-สกุล','สัตว์เลี้ยง','รายการ','ผู้ทำนัด','Follow'],
+    rows.map(function(x){ return [dText(x.d)+' '+esc(x.time), esc(x.hn), esc(x.name), esc(x.pet), esc(x.note), esc(x.who), esc(x.follow)]; }),
+    ['12%','13%','17%','10%','33%','9%','6%']);
+  h+='<div class="muted" style="margin-top:6px">นับตามวันที่นัด · ข้อมูลสะสมจากทุกไฟล์ที่นำเข้า (ตัดรายการซ้ำแล้ว) · Follow ตามไฟล์ TLP_01_01</div>';
+  $('monthPaper').innerHTML=h;
+}
+function dlMonth(){
+  if(!state.month) return;
+  var rows=monthFiltered(false), c=function(v){ v=String(v==null?'':v); return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; };
+  var csv='﻿'+[['วันที่นัด','เวลา','วันเวลาสร้างนัด','HN','ชื่อ-สกุล','สัตว์เลี้ยง','รายการ','ผู้ทำนัด','รหัส','Follow','ทำนัดจาก','Member']]
+    .concat(rows.map(function(x){ return [dText(x.d),x.time,x.created,x.hn,x.name,x.pet,x.note,x.who,x.code,x.follow,x.from,x.member]; }))
+    .map(function(r){ return r.map(c).join(','); }).join('\n');
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='นัดหมาย_'+state.month.monthKey+(state.month.toKey!==state.month.monthKey?'_'+state.month.toKey:'')+'.csv'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* =============== สรุปประจำวัน =============== */
+function loadDaily(){
+  var el=$('dailyPaper'); loading(el);
+  run('getDailyReport', $('saleDate').value, $('pintoDate').value || $('saleDate').value).then(function(r){
+    state.daily=r; $('mCount').value=r.manual.count; $('mAmt').value=r.manual.amount; $('manualBox').hidden=false; renderDaily(r);
+  }).catch(fail(el));
+}
+function renderDaily(r){
+  var tr=r.traffic, p=r.pintoSum, sd=r.sameday, v=r.vet, mc=$('mCount').value, ma=$('mAmt').value;
+  var warn = (!r.hasPos?'ยังไม่มีข้อมูล POS วันนี้ ':'')+(!r.hasImed?'ยังไม่มีข้อมูล ImedX วันนี้':'');
+  var prov = Object.keys(sd.byProvider).map(function(k){ return k+' '+sd.byProvider[k].count+' เคส '+n2(sd.byProvider[k].amount)+' บาท'; }).join(' · ');
+  var h='<table class="r kpi"><tr><td colspan="3" class="title">'+esc(r.title)+'</td><td class="date">'+r.saleText+'</td></tr>'+
+  '<tr><th class="l">หัวข้อ</th><th>จำนวน</th><th>ยอดเงิน (บาท)</th><th>รายละเอียด</th></tr>'+
+  row('1. Traffic ลูกค้าที่มาใช้บริการ', tr.count+' เคส', n2(tr.amount), 'POS '+tr.bill+' บิล ('+n2(tr.billAmt)+') · ImedX '+tr.visit+' VN ('+n2(tr.visitAmt)+') · ลูกค้าไม่ซ้ำ '+tr.customers+' ราย')+
+  row('2. เคสผูกปิ่นโตมาตามนัด', p.count+' เคส', n2(p.amount), 'นัดวันที่ '+r.apptText+' ทั้งหมด '+p.appts+' ราย')+
+  row('3. สั่งซื้อผ่าน โทร / LINE', (mc===''?'-':mc)+' เคส', ma===''?'-':n2(ma), 'เจ้าหน้าที่กรอก')+
+  row('4. เคส Same day', sd.count+' เคส', n2(sd.amount), prov||'-')+
+  row('5. ซื้อสินค้าสั่งจ่ายผ่าน VET', v.count+' VISIT', n2(v.amount), 'สินค้า 2-, A01–A17')+
+  '</table>';
+  if(warn) h+='<div class="muted err" style="margin-top:6px">⚠ '+warn+'</div>';
+  h+='<div class="sec">เคสปิ่นโตที่มาตามนัด</div>'+listTable('dp',['ชื่อ-สกุล','สัตว์เลี้ยง','รายการนัด','POS','ImedX','รวม'],
+    r.pinto.map(function(x){ return [esc(x.name), esc(x.pet), esc(x.note), n2(x.pos), n2(x.imed), '<b>'+n2(x.total)+'</b>']; }),['20%','11%','36%','11%','11%','11%']);
+  h+='<div class="sec">เคสที่หมอสั่งจ่ายสินค้า</div>'+listTable('dv',['VN/AN','เจ้าของ','สัตว์เลี้ยง','ผู้สั่ง','ยอด'],
+    v.list.map(function(x){ return [esc(x.vn), esc(x.own), esc(x.pet), esc(x.ord), n2(x.val)]; }),['20%','25%','15%','27%','13%']);
+  $('dailyPaper').innerHTML=h;
+  function row(a,b,c,d){ return '<tr><td class="k">'+a+'</td><td class="b big">'+b+'</td><td class="rd big">'+c+'</td><td class="l muted">'+esc(d)+'</td></tr>'; }
+}
+function saveManual(){
+  var k=state.daily ? state.daily.saleKey : $('saleDate').value;
+  run('saveManual', k, $('mCount').value, $('mAmt').value).then(function(){ toast('บันทึกยอดโทร/LINE แล้ว'); if(state.daily) renderDaily(state.daily); }).catch(fail());
+}
+function copyDaily(){
+  var r=state.daily; if(!r) return;
+  var mc=$('mCount').value, ma=$('mAmt').value;
+  // รูปแบบข้อความ LINE: ถ้าหัวข้อไหนไม่มี ให้ขึ้น "* ไม่มี"
+  function sec(no, head, count, amount, withAmt){
+    count=Number(count)||0;
+    if(!count) return no+'. '+head.trim()+'\n\n-ไม่มี';
+    return no+'. '+head+'มีจำนวน  '+n0(count)+'  เคส'+(withAmt?'\nจำนวนเงิน  '+n0(amount)+'  บาท':'');
+  }
+  var t=['PET SHOP',
+    sec(1,'Traffic ของจำนวนเคสที่มาใช้บริการ', r.traffic.count, 0, false),
+    sec(2,'เคสผูกปิ่นโตมาตามนัด', r.pintoSum.count, r.pintoSum.amount, true),
+    sec(3,'เคสสั่งซื้อสินค้าผ่านช่องทาง โทร / LIne ', mc, ma, true),
+    sec(4,'เคส Samday ', r.sameday.count, r.sameday.amount, true),
+    sec(5,'เคสที่ซื้อสินค้าสั่งจ่ายผ่าน VET ', r.vet.count, r.vet.amount, true)
+  ].join('\n\n');
+  copyText(t);
+}
+function copyText(t){
+  var done=function(){ toast('คัดลอกแล้ว นำไปวางใน LINE ได้เลย'); };
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t).then(done).catch(fallback); } else fallback();
+  function fallback(){ var a=document.createElement('textarea'); a.value=t; document.body.appendChild(a); a.select(); try{ document.execCommand('copy'); done(); }catch(e){ prompt('คัดลอกข้อความนี้',t); } a.remove(); }
+}
+
+/* =============== ซื้อแต่ไม่มีนัด =============== */
+(function(){
+  var g=['2'], d=['2','A01','A09'];
+  for(var i=1;i<=17;i++) g.push('A'+(i<10?'0':'')+i);
+  $('naGroups').innerHTML=g.map(function(x){ return '<label style="font-weight:400;margin-right:8px;white-space:nowrap"><input type="checkbox" class="nag" value="'+x+'"'+(d.indexOf(x)>=0?' checked':'')+'> '+(x==='2'?'2-':x)+'</label>'; }).join('');
+})();
+function loadNoAppt(){
+  var el=$('naPaper'); loading(el);
+  var groups=[].slice.call(document.querySelectorAll('.nag:checked')).map(function(x){ return x.value; });
+  run('getNoApptReport', $('naStart').value, $('naEnd').value, groups, $('naMin').value).then(function(r){ state.noappt=r; renderNoAppt(); }).catch(fail(el));
+}
+/* ---------- ติดตามลูกค้า ---------- */
+var FOL_ST=[
+  ['โทรแล้ว – จะมารับ','📅 วันที่จะมารับ','#2e7d32'],
+  ['เลื่อนวันมารับ','📅 เลื่อนไปวันที่','#c77700'],
+  ['ไม่รับสาย','🔁 โทรซ้ำวันที่','#c62828'],
+  ['ฝากข้อความ / LINE แล้ว','🔁 ติดตามซ้ำวันที่','#6a1b9a'],
+  ['ทำนัดในระบบ ImedX แล้ว','📅 วันที่นัด','#0b5394'],
+  ['มารับแล้ว','📅 วันที่มารับ','#2e7d32'],
+  ['ไม่ต้องการ / ซื้อที่อื่น','','#555'],
+  ['อื่น ๆ','📅 วันที่ (ไม่บังคับ)','#555']];
+var FOL_DONE={'ทำนัดในระบบ ImedX แล้ว':1,'มารับแล้ว':1,'ไม่ต้องการ / ซื้อที่อื่น':1};
+function folColor(st){ var x=FOL_ST.filter(function(a){ return a[0]===st; })[0]; return x?x[2]:'#555'; }
+function folCell(x,i){
+  var f=x.follow, r=state.noappt;
+  if(!f) return '<span class="muted">ยังไม่ติดตาม</span><br><button class="btn alt" style="margin-top:4px;padding:5px 10px" onclick="openFol('+i+')">📞 บันทึก</button>';
+  var due=!FOL_DONE[f.status] && f.date && f.date<=r.today;
+  return '<b style="color:'+folColor(f.status)+'">'+esc(f.status)+'</b>'+(f.date?'<br>'+(due?'<span class="err"><b>⏰ '+dText(f.date)+'</b></span>':dText(f.date)):'')+
+    (f.note?'<br><span class="muted" style="font-size:11px">'+esc(f.note)+'</span>':'')+
+    '<br><span class="muted" style="font-size:11px">โดย '+esc(f.by)+' · '+esc(String(f.at).slice(5).replace('-','/'))+(f.count>1?' · '+f.count+' ครั้ง':'')+'</span>'+
+    '<br><button class="btn alt" style="margin-top:4px;padding:5px 10px" onclick="openFol('+i+')">📞 อัปเดต</button>';
+}
+function openFol(i){
+  var x=state.noappt.rows[i]; state.folX=x; state.folSt='';
+  $('folName').textContent=x.name; $('folSub').textContent=(x.hn?x.hn+' · ':'')+'ซื้อล่าสุด '+x.lastText+' · ยอด '+n0(x.amt)+' บาท';
+  $('folSt').innerHTML=FOL_ST.map(function(a,k){ return '<button type="button" class="btn alt fst" data-k="'+k+'" style="padding:7px 10px;font-size:13px" onclick="pickFol('+k+')">'+esc(a[0])+'</button>'; }).join('');
+  $('folDate').value=''; $('folNote').value=''; $('folEr').textContent=''; $('folDateLbl').textContent='วันที่'; $('folDateBox').style.display='';
+  $('folHist').innerHTML='<div class="muted">กำลังโหลดประวัติ...</div>';
+  $('folMd').classList.add('on');
+  run('getFollowHistory',x.key).then(renderFolHist).catch(function(){ $('folHist').innerHTML=''; });
+}
+function pickFol(k){
+  state.folSt=FOL_ST[k][0];
+  document.querySelectorAll('.fst').forEach(function(b){ b.className='btn fst'+(+b.dataset.k===k?'':' alt'); });
+  $('folDateLbl').textContent=FOL_ST[k][1]||'';
+  $('folDateBox').style.display=FOL_ST[k][1]===''?'none':'';
+  if(!$('folDate').value && FOL_ST[k][1] && k!==7){ var d=new Date(Date.now()+7*3600000); d.setUTCDate(d.getUTCDate()+(k===2||k===3?1:0)); $('folDate').value=d.toISOString().slice(0,10); }
+}
+function renderFolHist(h){
+  $('folHist').innerHTML=h.list.length?'<b>ประวัติการติดตาม ('+h.list.length+')</b><table class="list auto" style="margin-top:6px">'+h.list.map(function(x){
+    return '<tr><td style="white-space:nowrap">'+esc(String(x.at).slice(5).replace('-','/'))+'</td><td><b style="color:'+folColor(x.status)+'">'+esc(x.status)+'</b>'+(x.date?' · '+dText(x.date):'')+(x.note?'<br><span class="muted">'+esc(x.note)+'</span>':'')+'</td><td class="muted">'+esc(x.by)+'</td></tr>'; }).join('')+'</table>':'<div class="muted">ยังไม่มีประวัติการติดตาม</div>';
+}
+function saveFol(){
+  var x=state.folX; if(!state.folSt){ $('folEr').textContent='กรุณาเลือกสถานะ'; return; }
+  var b=$('folGo'); b.disabled=true;
+  var f={key:x.key,name:x.name,hn:x.hn,status:state.folSt,date:$('folDateBox').style.display==='none'?'':$('folDate').value,note:$('folNote').value.trim()};
+  run('saveFollow',f).then(function(h){
+    b.disabled=false;
+    var l=h.latest; x.follow={at:l.at,status:l.status,date:l.date,note:l.note,by:l.by,count:h.count};
+    renderNoAppt(); toast('บันทึกการติดตามแล้ว'); closeMd('folMd');
+  }).catch(function(e){ b.disabled=false; $('folEr').textContent=e.message||e; });
+}
+
+function naFiltered(){
+  var r=state.noappt, sh=$('naShow').value, q=$('naText').value.trim().toLowerCase();
+  return r.rows.filter(function(x){
+    if(sh==='no' && x.hasAppt) return false;
+    if(sh==='yes' && !x.hasAppt) return false;
+    if(sh==='missing' && !x.missing) return false;
+    var fo=$('naFol').value, f=x.follow, done=f&&FOL_DONE[f.status];
+    if(fo==='none' && f) return false;
+    if(fo==='open' && (!f||done)) return false;
+    if(fo==='done' && !done) return false;
+    if(fo==='due' && !(f && !done && f.date && f.date<=r.today)) return false;
+    if(q && (x.name+' '+x.hn+' '+x.prods.map(function(p){return p.code+' '+p.name;}).join(' ')).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+function renderNoAppt(){
+  var r=state.noappt; if(!r) return;
+  var rows=naFiltered(), sh=$('naShow').value, M=r.months.length;
+  var nMiss=r.rows.filter(function(x){return x.missing;}).length;
+  var h='<table class="r"><tr><td colspan="4" class="title">ลูกค้าซื้อสินค้า เทียบกับนัดหมายในระบบ</td><td class="date">'+r.startText+(r.start!==r.end?' - '+r.endText:'')+'</td></tr>'+
+    '<tr><th>ลูกค้าที่ซื้อสินค้า (มีชื่อ)</th><th>มีนัดแล้ว</th><th>ยังไม่มีนัด</th><th>% ยังไม่มีนัด</th><th>ซื้อประจำแต่เดือนล่าสุดยังไม่ซื้อ</th><th>ติดตามแล้ว / ยังไม่มีนัด</th></tr>'+
+    '<tr><td class="big b">'+r.total+'</td><td class="big b">'+r.withAppt+'</td><td class="big rd">'+r.without+'</td><td class="big rd">'+(r.total?pc(r.without/r.total):'-')+'</td><td class="big rd">'+nMiss+'</td><td class="big b">'+r.rows.filter(function(x){ return !x.hasAppt && x.follow; }).length+' / '+r.without+'</td></tr></table>';
+  h+='<div class="sec">'+({no:'ยังไม่มีนัด',yes:'มีนัดแล้ว',missing:'ซื้อประจำแต่เดือนล่าสุดยังไม่ซื้อ','':'ทั้งหมด'})[sh]+' '+rows.length+' ราย</div>';
+  if(!rows.length){ h+='<table class="list"><tr><td class="empty">ไม่มีรายการ</td></tr></table>'; }
+  else {
+    h+='<div id="naw"><table class="list mx"><tr><th style="width:170px">ลูกค้า / HN</th><th style="width:240px">สินค้าที่ซื้อ</th><th style="width:72px">ซื้อล่าสุด</th>'+
+      r.monthText.map(function(m){ return '<th class="num" style="width:68px">'+m+'</th>'; }).join('')+'<th class="num" style="width:76px">รวม</th><th style="width:90px">นัดล่าสุด</th><th style="width:170px">การติดตาม</th></tr>';
+    rows.forEach(function(x,gi){
+      var more=gi>=10?' class="more"':'', n=x.prods.length+1;
+      var ap=x.apptText?(x.hasAppt?'<span class="ok">'+x.apptText+'</span>':'<span class="muted">'+x.apptText+'</span><br><span class="err">ต้องทำนัด</span>'):'<span class="err">ยังไม่เคยนัด</span>';
+      h+='<tr'+more+' style="border-top:1.5px solid #333"><td rowspan="'+n+'"><b>'+esc(x.name)+'</b>'+(x.hn?'<br><span class="muted">'+esc(x.hn)+'</span>':'')+'<br><span class="muted">'+esc(x.who)+'</span></td>'+
+        '<td colspan="2" style="background:#f4f7fb"><b>รวมทุกสินค้า</b> <span class="muted">'+x.bills+' บิล</span></td>'+
+        x.monthAmt.map(function(v){ return '<td class="num" style="background:#f4f7fb"><b>'+(v?n0(v):'')+'</b></td>'; }).join('')+
+        '<td class="num" style="background:#f4f7fb"><b>'+n0(x.amt)+'</b></td><td rowspan="'+n+'">'+ap+'</td><td rowspan="'+n+'">'+folCell(x,r.rows.indexOf(x))+'</td></tr>';
+      x.prods.forEach(function(p){
+        h+='<tr'+more+(p.missing?' style="background:#fff0f0"':'')+'><td>'+esc(p.name)+(p.missing?' <span class="err">● ยังไม่ซื้อเดือนนี้</span>':'')+'<br><span class="muted">'+esc(p.code)+'</span></td><td>'+p.lastText+'</td>'+
+          p.months.map(function(v,k){ return '<td class="num">'+(v?n0(v)+'<br><span class="muted">'+p.qtys[k]+' ชิ้น</span>':'')+'</td>'; }).join('')+
+          '<td class="num">'+n0(p.amt)+'</td></tr>';
+      });
+    });
+    h+='</table>';
+    if(rows.length>10) h+='<button class="toggle" onclick="var w=document.getElementById(\'naw\');w.classList.toggle(\'open\');this.textContent=w.classList.contains(\'open\')?\'หุบรายการ ▲\':\'ดูทั้งหมด '+rows.length+' ราย ▼\'">ดูทั้งหมด '+rows.length+' ราย ▼</button>';
+    h+='</div>';
+  }
+  h+='<div class="muted" style="margin-top:6px">ยอดเงินเป็นบาท แยกตามเดือนที่ซื้อ · กลุ่มสินค้า: '+r.groups.map(function(g){return g==='2'?'2-':g;}).join(', ')+
+    ' · บันทึกการโทร/สถานะที่ปุ่ม 📞 · "มีนัดแล้ว" = มีนัดที่วันที่นัด ≥ วันที่ซื้อล่าสุด (จับคู่ HN หรือชื่อหลังตัดคำว่าคุณ) · ● = ซื้อ ≥ 2 เดือนในช่วงนี้ แต่เดือนล่าสุดยังไม่ซื้อ · ไม่รวม "ลูกค้าทั่วไป"</div>';
+  var pp=$('naPaper'); pp.style.width=Math.max(1000, 890+M*70)+'px'; pp.innerHTML=h;
+}
+function dlNoAppt(){
+  var r=state.noappt; if(!r) return;
+  var head=['ลูกค้า','HN','รหัสสินค้า','สินค้า','ซื้อล่าสุด'].concat(r.monthText).concat(['รวม (บาท)','จำนวนชิ้นรวม','ยังไม่ซื้อเดือนล่าสุด','นัดล่าสุด','สถานะนัด','ผู้ขาย/ผู้สั่ง','สถานะติดตาม','วันที่ (ติดตาม)','ผู้ติดตาม','หมายเหตุติดตาม']);
+  var out=[head];
+  naFiltered().forEach(function(x){ x.prods.forEach(function(p){
+    out.push([x.name,x.hn,p.code,p.name,p.lastText].concat(p.months).concat([p.amt,p.qty,p.missing?'ใช่':'',x.apptText,x.hasAppt?'มีนัดแล้ว':'ยังไม่มีนัด',x.who,(x.follow||{}).status||'',(x.follow||{}).date||'',(x.follow||{}).by||'',(x.follow||{}).note||'']));
+  }); });
+  var a=document.createElement('a'); a.href=URL.createObjectURL(new Blob(['﻿'+toCSV(out)],{type:'text/csv;charset=utf-8'}));
+  a.download='ลูกค้าซื้อสินค้า_'+r.start+'_'+r.end+'.csv'; document.body.appendChild(a); a.click(); a.remove();
+}
+
+/* =============== รายสัปดาห์ =============== */
+function loadWeekly(){
+  var el=$('weeklyPaper'); loading(el);
+  run('getWeeklyReport', $('weekMonth').value).then(function(r){ state.weekly=r; renderWeekly(r); }).catch(fail(el));
+}
+var EN_M=['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+function renderWeekly(r){
+  var W=r.weeks, n=W.length, T=r.total, ca=0, cv=0, cb=0, cm=0;
+  var mi=Number(r.monthKey.slice(5,7))-1;
+  var cA='#d9f2d0', cV='#fbe0d4', cB='#f0d0ef', cH='#bfe3f2';
+  var bd='border:2px solid #222;', big='font-size:30px;font-weight:600';
+  var th=function(t,bg,ex){ return '<th style="'+bd+'background:'+bg+';font-size:15px;font-weight:600'+(ex||'')+'">'+t+'</th>'; };
+  var td=function(t,ex){ return '<td style="'+bd+'font-size:16px'+(ex||'')+'">'+t+'</td>'; };
+  var pct=function(a,b){ return b?Math.round(a/b*100)+'%':'-'; };
+  var h='<table class="r wk" style="border-collapse:collapse"><tr><th rowspan="2" style="'+bd+'background:'+cH+';font-size:16px;font-weight:600;width:9%">สัปดาห์</th>'+
+    '<th colspan="9" style="'+bd+'background:'+cH+';font-size:18px;font-weight:600">เป้าหมาย VISIT นัด และ BILL แผนก PET SHOP&nbsp; '+EN_M[mi]+' '+r.monthKey.slice(0,4)+'</th></tr>'+
+    '<tr>'+th('TARGET นัด/เดือน',cA)+th('ทำได้ สะสม',cA)+th('% เข้าเป้า',cA)+th('TARGET VISIT',cV)+th('ทำได้ สะสม',cA)+th('% เข้าเป้า',cV)+
+    th('TARGET BILL',cB)+th('ทำได้ สะสม',cB)+th('% เข้าเป้า',cB)+'</tr>';
+  W.forEach(function(w,i){
+    ca+=w.appt; cv+=w.visit; cb+=w.bill; cm+=w.posAmt+w.imedAmt;
+    var avg=cb?cm/cb:0, f=w.future;
+    h+='<tr>'+td(w.label,';background:'+cH+';font-weight:600')+
+      (i===0?'<td rowspan="'+n+'" style="'+bd+'background:'+cA+';'+big+'">'+n0(T.apptT)+'</td>':'')+
+      td(f?'':n0(ca))+td(f?'':pct(ca,T.apptT))+
+      (i===0?'<td rowspan="'+n+'" style="'+bd+'background:'+cV+';'+big+'">'+n0(T.visitT)+'</td>':'')+
+      td(f?'':n0(cv))+td(f?'':pct(cv,T.visitT))+
+      (i===0?'<td rowspan="'+n+'" style="'+bd+'background:'+cB+';'+big+'">'+n0(T.billT)+'</td>':'')+
+      td(f?'':n0(avg))+td(f?'':pct(avg,T.billT))+'</tr>';
+  });
+  h+='</table>';
+  // รายละเอียดแต่ละสัปดาห์ (ไม่สะสม)
+  h+='<div class="sec">รายละเอียดแต่ละสัปดาห์ (ไม่สะสม)</div><table class="r"><tr><th>สัปดาห์</th><th>ช่วงวันที่</th><th>นัดหมาย</th><th>VISIT</th><th>จำนวนบิล</th><th>เฉลี่ย/บิล</th><th>ImedX</th><th>POS</th><th>ยอดขายรวม</th><th>โทร/LINE</th></tr>';
+  W.forEach(function(w){
+    var amt=w.posAmt+w.imedAmt;
+    h+='<tr><td><b>'+w.label+'</b></td><td>'+w.range+'</td><td>'+w.appt+'</td><td>'+n0(w.visit)+'</td><td>'+n0(w.bill)+'</td><td>'+(w.bill?n0(amt/w.bill):'-')+'</td><td>'+n0(w.imedAmt)+'</td><td>'+n0(w.posAmt)+'</td><td><b>'+n0(amt)+'</b></td><td>'+n0(w.manualAmt)+'</td></tr>';
+  });
+  var ta=T.posAmt+T.imedAmt;
+  h+='<tr class="tot"><td colspan="2">รวมทั้งเดือน</td><td>'+T.appt+'</td><td>'+n0(T.visit)+'</td><td>'+n0(T.bill)+'</td><td>'+(T.bill?n0(ta/T.bill):'-')+'</td><td>'+n0(T.imedAmt)+'</td><td>'+n0(T.posAmt)+'</td><td>'+n0(ta)+'</td><td>'+n0(T.manualAmt)+'</td></tr></table>';
+  h+='<div class="muted" style="margin-top:6px">W1 = 1–7, W2 = 8–14, W3 = 15–21, W4 = 22–สิ้นเดือน · ทำได้สะสม = ยอดตั้งแต่วันที่ 1 ถึงสิ้นสัปดาห์นั้น · นัด นับจากวันที่นัด · VISIT = ลูกค้าไม่ซ้ำชื่อ (ตัดคำว่าคุณ) ต่อวัน จาก POS + ImedX · '+
+    'BILL = ยอดเฉลี่ยต่อบิลสะสม = ยอดขายสะสม (POS + ImedX สินค้า) ÷ จำนวนบิลสะสม (บิล POS + VN ImedX) เทียบกับ TARGET BILL (บาท/บิล) · สัปดาห์ที่ยังไม่ถึงเว้นว่าง</div>';
+  $('weeklyPaper').innerHTML=h;
+}
+
+/* =============== ตรวจยอด Grab / LINE MAN =============== */
+function loadSameday(){
+  var el=$('sdPaper'); loading(el);
+  var sel=$('sdSeller').value;
+  run('getSamedayReport', $('sdDate').value, sel).then(function(r){
+    state.sameday=r;
+    $('sdSeller').innerHTML='<option value="">ทั้งหมด</option>'+r.sellers.map(function(x){ return '<option'+(x===sel?' selected':'')+'>'+esc(x)+'</option>'; }).join('');
+    renderSameday();
+  }).catch(fail(el));
+}
+function renderSameday(){
+  var r=state.sameday; if(!r) return;
+  var ok=r.list.filter(function(x){return !x.cancelled;}), done=ok.filter(function(x){return x.checked;}).length;
+  // ยอดสรุป = เฉพาะออเดอร์ที่ติ๊กตรวจแล้ว (เทียบกับยอดทั้งหมดจาก POS)
+  var sumOf=function(prov,onlyChecked){ var a=0,c=0; ok.forEach(function(x){ if((prov===null||x.prov===prov)&&(!onlyChecked||x.checked)){ a+=x.net; c++; } }); return {amount:a,count:c}; };
+  var lm=sumOf('LINE MAN',true), gb=sumOf('Grab',true), ck=sumOf(null,true), lmA=sumOf('LINE MAN',false), gbA=sumOf('Grab',false), allA=sumOf(null,false);
+  var all=ck.amount, cnt=ck.count;
+  var Y='#ffff00', C='#00ffff', bd='border:1.5px solid #222;';
+  var h='<div style="display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap">';
+  // ตารางซ้าย
+  h+='<div style="flex:1 1 560px"><table class="r" style="border-collapse:collapse"><tr><td colspan="4" style="'+bd+'background:'+C+';font-size:17px;font-weight:700">รายงาน Sameday &nbsp; '+esc(r.dateText)+'</td></tr>'+
+    '<tr><th style="'+bd+'background:'+Y+';width:22%">เวลาที่คีย์</th><th style="'+bd+'background:'+Y+'">ORDER</th><th style="'+bd+'background:'+Y+';width:18%">ราคารวม</th><th style="'+bd+'background:'+Y+';width:16%">ตรวจสอบรายการ<br>ที่คีย์แล้ว</th></tr>';
+  if(!r.list.length) h+='<tr><td colspan="4" class="empty">'+(r.hasPos?'ไม่มีรายการ Sameday':'ยังไม่มีข้อมูล POS ของวันนี้ — นำเข้าไฟล์ TLPH-DATA ก่อน')+'</td></tr>';
+  r.list.forEach(function(x){
+    var st=x.cancelled?'text-decoration:line-through;color:#999;':'';
+    h+='<tr><td style="'+bd+st+'">'+thaiShortKey(r.dateKey)+' '+esc(x.time)+'</td>'+
+      '<td style="'+bd+st+'"><b>'+esc(x.del)+'</b> <span class="muted">'+esc(x.prov)+'</span>'+(x.voidDocs?'<br><span class="err" style="font-size:11px">มีบิลยกเลิก '+esc(x.voidDocs)+'</span>':'')+'</td>'+
+      '<td style="'+bd+st+'text-align:right">'+n2f(x.net)+'</td>'+
+      '<td style="'+bd+'">'+(x.cancelled?'<span class="muted">ยกเลิก</span>':'<input type="checkbox" style="width:20px;height:20px" data-del="'+esc(x.del)+'" '+(x.checked?'checked':'')+' onchange="checkSd(this)">')+'</td></tr>';
+  });
+  h+='</table></div>';
+  // กล่องขวา
+  var rowS=function(t,v,a,bold){ var diff=Math.round((a.amount-v.amount)*100)/100;
+    return '<tr><th style="'+bd+'">'+t+'</th><td style="'+bd+'text-align:right">'+(bold?'<b>':'')+n2f(v.amount)+(bold?'</b>':'')+'</td><td style="'+bd+'">บาท</td><td style="'+bd+'text-align:right;font-size:12px" class="'+(diff?'err':'muted')+'">'+(diff?'ยังไม่ติ๊ก '+n2f(diff):'ครบ')+'</td></tr>'; };
+  h+='<div style="flex:0 0 330px"><table class="r" style="border-collapse:collapse"><tr><td colspan="4" style="'+bd+'background:'+C+';font-size:17px;font-weight:700">สรุปยอดขาย Online <span style="font-size:12px;font-weight:400">(รวมเฉพาะที่ติ๊กแล้ว)</span></td></tr>'+
+    rowS('LINE MAN',lm,lmA)+rowS('Grab',gb,gbA)+rowS('รวม Online',ck,allA,true)+
+    '<tr><td colspan="4" style="'+bd+'" class="muted">ติ๊กแล้ว LINE MAN '+lm.count+'/'+lmA.count+' · Grab '+gb.count+'/'+gbA.count+' · ยอดทั้งหมดจาก POS '+n2f(allA.amount)+' บาท</td></tr></table>'+
+    '<table class="r" style="border-collapse:collapse;margin-top:14px"><tr><td style="'+bd+'background:'+C+';font-size:17px;font-weight:700">พนักงานขาย</td></tr>'+
+    '<tr><td style="'+bd+'font-size:15px">'+esc(r.seller||'ทั้งหมด')+'</td></tr></table>'+
+    '<table class="r" style="border-collapse:collapse;margin-top:14px"><tr><td style="'+bd+'background:'+(done===ok.length&&ok.length?'#c8f7c5':'#ffe1e1')+';font-size:16px;font-weight:700">ตรวจแล้ว '+done+' / '+ok.length+' ออเดอร์</td></tr></table></div>';
+  h+='</div><div class="muted" style="margin-top:8px">ข้อมูลจาก POS (คอลัมน์ เลขที่การจัดส่ง) · รวมหลายบิลที่ใช้เลข ORDER เดียวกัน · บิลที่ยกเลิก (VOID) ไม่นับยอด · ติ๊กแล้วบันทึกทันที</div>';
+  $('sdPaper').innerHTML=h;
+}
+function thaiShortKey(k){ var p=k.split('-'); return p[2]+'/'+p[1]+'/'+p[0]; }
+function n2f(x){ return Number(x||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function checkSd(cb){
+  var r=state.sameday, del=cb.dataset.del;
+  r.list.forEach(function(x){ if(x.del===del) x.checked=cb.checked; });
+  cb.disabled=true;
+  run('saveSamedayCheck', r.dateKey, [del], cb.checked, r.seller||'').then(function(){ renderSameday(); }).catch(function(e){ cb.checked=!cb.checked; cb.disabled=false; fail()(e); });
+}
+function checkAllSd(on){
+  var r=state.sameday; if(!r) return;
+  var dels=r.list.filter(function(x){ return !x.cancelled && x.checked!==on; }).map(function(x){ x.checked=on; return x.del; });
+  if(!dels.length) return;
+  renderSameday();
+  run('saveSamedayCheck', r.dateKey, dels, on, r.seller||'').then(function(){ toast(on?'ติ๊กทั้งหมดแล้ว':'ล้างติ๊กแล้ว'); }).catch(fail());
+}
+
+/* =============== นำเข้าไฟล์ =============== */
+(function(){
+  var d=$('drop'), f=$('file');
+  d.onclick=function(){ f.click(); };
+  f.onchange=function(){ handleFiles([].slice.call(f.files)); f.value=''; };
+  ['dragenter','dragover'].forEach(function(e){ d.addEventListener(e,function(ev){ ev.preventDefault(); d.classList.add('hover'); }); });
+  ['dragleave','drop'].forEach(function(e){ d.addEventListener(e,function(ev){ ev.preventDefault(); d.classList.remove('hover'); }); });
+  d.addEventListener('drop',function(ev){ handleFiles([].slice.call(ev.dataTransfer.files)); });
+})();
+function readFile(file, enc){ return new Promise(function(ok,bad){ var r=new FileReader(); r.onload=function(){ ok(r.result); }; r.onerror=bad; r.readAsText(file, enc); }); }
+/* ---------- CSV ฝั่งเบราว์เซอร์ (ใช้กรอง/แบ่งชุดไฟล์ใหญ่) ---------- */
+function parseCSV(t){
+  var rows=[], row=[], f='', q=false, i=0, n=t.length, c;
+  for(;i<n;i++){
+    c=t[i];
+    if(q){ if(c==='"'){ if(t[i+1]==='"'){ f+='"'; i++; } else q=false; } else f+=c; }
+    else if(c==='"') q=true;
+    else if(c===','){ row.push(f); f=''; }
+    else if(c==='\n'||c==='\r'){ if(c==='\r'&&t[i+1]==='\n') i++; row.push(f); rows.push(row); row=[]; f=''; }
+    else f+=c;
+  }
+  if(f!==''||row.length){ row.push(f); rows.push(row); }
+  return rows;
+}
+function toCSV(rows){ return rows.map(function(r){ return r.map(function(v){ v=String(v==null?'':v); return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }).join(','); }).join('\n'); }
+var PRODUCT_RE=/^(2-|A(0[1-9]|1[0-7])-)/i;
+/** POS / ImedX: กรองเฉพาะที่ใช้ แล้วแบ่งเป็นชุดตามวัน (วันเดียวกันไม่ถูกแยกชุด) */
+function splitBig(text){
+  var head=text.slice(0,6000), type='';
+  if(head.indexOf('วันเวลาที่ขาย')>=0 && head.indexOf('เลขที่เอกสาร')>=0) type='POS';
+  else if(head.indexOf('รายงานอัตราการจ่ายยา')>=0 || head.indexOf('VN/AN')>=0) type='IMED';
+  if(!type) return null;
+  var rows=parseCSV(text.replace(/^﻿/,'')), hi, h, dc, cc=-1, total=0;
+  if(type==='POS'){ hi=0; h=rows[0].map(function(x){return x.trim();}); dc=h.indexOf('วันเวลาที่ขาย'); }
+  else { hi=rows.findIndex(function(r){ return r.some(function(x){ return x.trim()==='VN/AN'; }); });
+    h=rows[hi].map(function(x){ return x.replace(/\s+/g,''); }); dc=h.indexOf('วันที่จ่าย'); cc=h.indexOf('รหัส'); }
+  var meta=rows.slice(0,hi+1), days=[], byDay={};
+  rows.slice(hi+1).forEach(function(r){
+    if(type==='IMED'){ if(!/^\s*[\d,]+\.?\s*$/.test(r[0]||'')) return; total++; if(!PRODUCT_RE.test((r[cc]||'').trim())) return; }
+    else { if(!(r[dc]||'').trim()) return; total++; }
+    var d=(r[dc]||'').trim().split(/\s+/).slice(0, type==='POS'?3:1).join(' ');
+    if(!byDay[d]){ byDay[d]=[]; days.push(d); }
+    byDay[d].push(r);
+  });
+  var chunks=[], cur=[];
+  days.forEach(function(d){ if(cur.length && cur.length+byDay[d].length>5000){ chunks.push(cur); cur=[]; } cur=cur.concat(byDay[d]); });
+  if(cur.length) chunks.push(cur);
+  return { type:type, total:total, kept:chunks.reduce(function(a,c){return a+c.length;},0), days:days.length,
+    chunks:chunks.map(function(c){ return toCSV(meta.concat(c)); }) };
+}
+async function handleFiles(files){
+  for (var i=0;i<files.length;i++){
+    var file=files[i], line=document.createElement('div');
+    line.innerHTML='⏳ <b>'+esc(file.name)+'</b> กำลังอ่านไฟล์...'; $('uplog').prepend(line);
+    try{
+      var text=await readFile(file,'UTF-8');
+      if((text.match(/�/g)||[]).length>20) text=await readFile(file,'windows-874');
+      var big=splitBig(text), r;
+      if(big){
+        var name=big.type==='POS'?'POS':'ImedX', added=0;
+        if(!big.chunks.length) throw new Error(big.type==='IMED'?'ไม่มีรายการสินค้า 2-, A01–A17 ในไฟล์':'ไม่พบรายการขาย');
+        for(var c=0;c<big.chunks.length;c++){
+          line.innerHTML='⏳ <b>'+esc(file.name)+'</b> '+name+' กำลังส่งชุดที่ '+(c+1)+'/'+big.chunks.length+'...';
+          r=await run('importCsvText', big.chunks[c], file.name+(big.chunks.length>1?' ('+(c+1)+'/'+big.chunks.length+')':''));
+          added+=r.count;
+        }
+        line.innerHTML='✅ <b>'+esc(file.name)+'</b> — <span class="ok">นำเข้า '+name+' '+n0(added)+' รายการ'+
+          (big.type==='IMED'?' (เฉพาะสินค้า จากทั้งไฟล์ '+n0(big.total)+' รายการ)':'')+' · '+big.days+' วัน · ส่ง '+big.chunks.length+' ชุด</span>';
+        continue;
+      }
+      r=await run('importCsvText', text, file.name);
+      line.innerHTML=(r.ok?'✅ ':'ℹ️ ')+'<b>'+esc(file.name)+'</b> — <span class="'+(r.ok?'ok':'')+'">'+esc(r.message)+'</span>';
+    }catch(e){ line.innerHTML='❌ <b>'+esc(file.name)+'</b> — <span class="err">'+esc(e.message||e)+'</span>'; }
+  }
+  clearCache(); loadImports();
+}
+function loadImports(){
+  run('getImports').then(function(imp){
+    var t=today().split('-'), td=Number(t[2])+'/'+Number(t[1])+'/'+t[0];
+    var m=[['APPT','นัดหมาย','TLP_01_01'],['POS','ยอดขาย POS','TLPH-DATA'],['IMED','ImedX','TLP_05_15'],['STOCK','STOCK','TLP_14_09'],['MASTER','Master / Barcode','TLP_18_05'],['GRAB','Grab Stock ส่งออก','ไฟล์ Grab']];
+    $('lastImp').innerHTML=m.map(function(x){ var v=imp[x[0]]||'', ok=v.indexOf(td+' ')===0, opt=x[0]==='MASTER';
+      return '<div class="stc '+(ok?'ok':(opt?'':'no'))+'"><b>'+(ok?'✅ ':(opt?'📄 ':'⚠️ '))+x[1]+'</b><span class="muted">'+x[2]+'</span><div class="muted" style="margin-top:4px">'+(v?'ล่าสุด '+esc(v):'ยังไม่เคยนำเข้า')+'</div></div>'; }).join('');
+  }).catch(function(){});
+}
+
+/* =============== Grab Stock =============== */
+(function(){
+  var d=$('gdrop'), f=$('gfile');
+  d.onclick=function(){ f.click(); };
+  f.onchange=function(){ grabFiles([].slice.call(f.files)); f.value=''; };
+  ['dragenter','dragover'].forEach(function(e){ d.addEventListener(e,function(ev){ ev.preventDefault(); d.classList.add('hover'); }); });
+  ['dragleave','drop'].forEach(function(e){ d.addEventListener(e,function(ev){ ev.preventDefault(); d.classList.remove('hover'); }); });
+  d.addEventListener('drop',function(ev){ grabFiles([].slice.call(ev.dataTransfer.files)); });
+})();
+async function grabFiles(files){
+  var items=[];
+  for(var i=0;i<files.length;i++){
+    var t=await readFile(files[i],'UTF-8');
+    if((t.match(/�/g)||[]).length>20) t=await readFile(files[i],'windows-874');
+    items.push({file:files[i], text:t, grab:/^﻿?StoreID,ItemID/i.test(t) || /STOREID,ITEMID,ITEMNAME/.test(t.slice(0,4000))});
+  }
+  items.sort(function(a,b){ return a.grab-b.grab; });   // STOCK ก่อน Grab
+  for(var j=0;j<items.length;j++){
+    var it=items[j], line=document.createElement('div');
+    line.innerHTML='⏳ <b>'+esc(it.file.name)+'</b> กำลังประมวลผล...'; $('glog').prepend(line);
+    try{
+      if(it.grab){
+        var r=await run('buildGrabStock', it.text, it.file.name);
+        state.grab=r; renderGrab(r); loadClaims();
+        line.innerHTML='✅ <b>'+esc(it.file.name)+'</b> — <span class="ok">เติมสต็อกแล้ว '+r.summary.matched+' รายการ กดดาวน์โหลดด้านล่าง</span>';
+      } else {
+        var x=await run('importCsvText', it.text, it.file.name);
+        line.innerHTML=(x.ok?'✅ ':'ℹ️ ')+'<b>'+esc(it.file.name)+'</b> — <span class="'+(x.ok?'ok':'')+'">'+esc(x.message)+'</span>';
+      }
+    }catch(e){ line.innerHTML='❌ <b>'+esc(it.file.name)+'</b> — <span class="err">'+esc(e.message||e)+'</span>'; }
+  }
+}
+function renderGrab(r){
+  var s=r.summary, old=r.stockAsOf && r.stockAsOf.split(' ')[0]!==r.today;
+  var h='<div class="card"><div class="bar" style="justify-content:space-between"><b style="font-size:16px">ผลการเติมสต็อก Grab</b>'+
+    '<span><button class="btn green" onclick="dlGrab()">⬇ ดาวน์โหลดไฟล์ CSV</button> <button class="btn alt" onclick="driveGrab(this)">บันทึกลง Drive</button></span></div>'+
+    '<div class="muted">ไฟล์: '+esc(r.fileName)+' · STOCK ณ '+esc(r.stockAsOf||'-')+(r.buffer?' · หักกันไว้ '+r.buffer+' ชิ้น/รายการ':'')+'</div>'+
+    (old?'<div class="err" style="margin-top:6px">⚠ ข้อมูล STOCK ไม่ใช่ของวันนี้ ('+esc(r.stockAsOf)+') ควรนำเข้า TLP_14_09 ล่าสุดก่อน</div>':'')+
+    '<table class="r" style="margin-top:10px"><tr><th>รายการในไฟล์ Grab</th><th>จับคู่ได้</th><th>มีของ (in stock)</th><th>หมด (out-of-stock)</th><th>ไม่พบในสต็อก</th><th>ยอดเปลี่ยน</th></tr>'+
+    '<tr><td class="big">'+s.total+'</td><td class="big b">'+s.matched+'</td><td class="big b">'+s.inStock+'</td><td class="big rd">'+s.out+'</td><td class="big rd">'+s.notFound.length+'</td><td class="big">'+s.changed.length+'</td></tr></table>'+
+    (s.claimed?'<div class="err" style="margin-top:6px">หักสินค้าเคลมแล้ว '+s.claimed+' รายการ</div>':'')+'<div class="muted" style="margin-top:6px">กฎ: CURRENTSTOCK = MAXSTOCK = คงเหลือ − เคลม · มากกว่า 0 = in stock · 0 = out-of-stock indefinitely · รายการที่ไม่พบในสต็อกคงค่าเดิมไว้</div></div>';
+  h+='<div class="card"><b>รายการที่ยอดเปลี่ยน</b>'+listTable('gc',['รหัส','ชื่อสินค้า','เดิม','ใหม่'],
+    s.changed.map(function(x){ return [esc(x.code),esc(x.name),x.old,'<b>'+x.now+'</b>']; }),['18%','62%','10%','10%'])+'</div>';
+  h+='<div class="card"><b>ไม่พบรหัสในไฟล์ STOCK (คงค่าเดิม)</b>'+listTable('gn',['รหัส','ชื่อสินค้า','สถานะเดิม'],
+    s.notFound.map(function(x){ return [esc(x.code),esc(x.name),esc(x.status)]; }),['18%','57%','25%'])+'</div>';
+  $('gres').innerHTML=h;
+}
+function dlGrab(){
+  var r=state.grab; if(!r) return;
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([r.csv],{type:'text/csv;charset=utf-8'}));
+  a.download=r.fileName; document.body.appendChild(a); a.click(); a.remove();
+  toast('ดาวน์โหลดแล้ว ถ้าไม่ขึ้นให้กด "บันทึกลง Drive"');
+}
+function driveGrab(b){
+  b.disabled=true;
+  run('saveCsvToDrive', state.grab.csv, state.grab.fileName).then(function(u){ b.disabled=false; window.open(u,'_blank'); toast('บันทึกในโฟลเดอร์ Grab Stock Export แล้ว'); }).catch(function(e){ b.disabled=false; fail()(e); });
+}
+
+/* ---------- สินค้าเคลม ---------- */
+function loadClaims(){ run('getClaims').then(renderClaims).catch(fail()); }
+function renderClaims(d){
+  state.claims=d;
+  var h='<tr><th style="width:4%">#</th><th style="width:16%">รหัสสินค้า</th><th>ชื่อสินค้า</th><th style="width:9%">จำนวนเคลม</th><th style="width:10%">STOCK ปัจจุบัน</th><th style="width:10%">STOCK หลังปรับ</th><th style="width:7%">GRAB</th><th style="width:14%">หมายเหตุ</th><th style="width:6%"></th></tr>';
+  (d.list.length?d.list:[{code:'',qty:'',note:''}]).forEach(function(c,i){ h+=claimRow(c,i+1); });
+  $('claimTbl').innerHTML=h;
+  $('claimInfo').textContent='STOCK ณ '+(d.stockAsOf||'-')+(d.hasGrab?'':' · ช่อง GRAB จะแสดงหลังสร้างไฟล์ Grab ครั้งแรก');
+}
+function claimRow(c,i){
+  var neg=c.found && c.stock-c.qty<0;
+  return '<tr><td style="text-align:center">'+(i||'')+'</td><td><input value="'+esc(c.code||'')+'" placeholder="A01-223-123" style="text-transform:uppercase"></td>'+
+    '<td>'+(c.code?(c.found?esc(c.name):'<span class="err">ไม่พบรหัสใน STOCK</span>'):'')+'</td>'+
+    '<td><input class="n" type="number" min="1" value="'+(c.qty||'')+'"></td>'+
+    '<td style="text-align:center">'+(c.stock==null?'-':c.stock)+'</td>'+
+    '<td style="text-align:center;font-weight:700'+(neg?';color:#c00':'')+'">'+(c.after==null?'-':c.after)+(neg?' <span class="muted">(ติดลบ→0)</span>':'')+'</td>'+
+    '<td style="text-align:center">'+(c.code?(c.grab?'มี':'<span class="muted">ไม่มี</span>'):'')+'</td>'+
+    '<td><input value="'+esc(c.note||'')+'" placeholder="เช่น เคลมบริษัท"></td>'+
+    '<td><button class="btn alt" onclick="this.closest(\'tr\').remove()">ลบ</button></td></tr>';
+}
+function addClaim(){ $('claimTbl').insertAdjacentHTML('beforeend', claimRow({code:'',qty:'',note:''})); }
+function saveClaimsUI(b){
+  var list=[].slice.call($('claimTbl').querySelectorAll('tr')).slice(1).map(function(tr){
+    var i=tr.querySelectorAll('input'); return {code:i[0].value, qty:i[1].value, note:i[2].value};
+  });
+  b.disabled=true;
+  run('saveClaims', list).then(function(d){ b.disabled=false; renderClaims(d); toast('บันทึกรายการเคลมแล้ว — สร้างไฟล์ Grab ใหม่เพื่อให้หักยอด'); }).catch(function(e){ b.disabled=false; fail()(e); });
+}
+
+/* =============== รายงานสั่งซื้อ =============== */
+function loadPurchase(){
+  var el=$('pOut'); loading(el);
+  run('getPurchaseReport', $('pDays').value, $('pCover').value).then(function(r){
+    state.purchase=r;
+    var cats={}, owners={};
+    r.items.forEach(function(i){ cats[i.cat]=1; if(i.owner) owners[i.owner]=1; });
+    var keepC=$('pCat').value, keepO=$('pOwner').value;
+    $('pCat').innerHTML='<option value="">ทุกหมวด</option>'+Object.keys(cats).sort().map(function(c){ return '<option'+(c===keepC?' selected':'')+' value="'+c+'">'+(c==='2'?'2-':c)+'</option>'; }).join('');
+    $('pOwner').innerHTML='<option value="">ทุกคน</option>'+Object.keys(owners).sort().map(function(o){ return '<option'+(o===keepO?' selected':'')+'>'+esc(o)+'</option>'; }).join('')+'<option value="-">ยังไม่กำหนด</option>';
+    renderPurchase();
+  }).catch(fail(el));
+}
+function ordInfo(sup){ var o=(state.purchase.orders||{})[sup]; if(!o||o.status!=='สั่งแล้ว') return null; var d=kd(o.date), age=(kd(today())-d)/864e5; return {o:o,recent:age<=7,text:d.getDate()+'/'+(d.getMonth()+1)}; }
+function purFiltered(){
+  var r=state.purchase, c=$('pCat').value, ow=$('pOwner').value, st=$('pStat').value, od=$('pOrd').value, q=$('pText').value.trim().toLowerCase();
+  return r.items.filter(function(i){
+    if(c && i.cat!==c) return false;
+    if(ow && (ow==='-'?i.owner:i.owner!==ow)) return false;
+    if(st==='need' && i.status==='ปกติ') return false;
+    if(st && st!=='need' && i.status!==st) return false;
+    if(od){ var oi=ordInfo(i.sup); if(od==='yes'&&!(oi&&oi.recent)) return false; if(od==='no'&&oi&&oi.recent) return false; }
+    if(q && (i.sup+' '+i.supName+' '+i.code+' '+i.name).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+function renderPurchase(){
+  var r=state.purchase; if(!r) return;
+  var items=purFiltered(), g={};
+  items.forEach(function(i){ var x=g[i.sup]=g[i.sup]||{sup:i.sup,name:i.supName,owners:{},out:0,low:0,items:[]}; x.items.push(i); if(i.owner) x.owners[i.owner]=1; if(i.status==='หมด') x.out++; else if(i.status==='ใกล้หมด') x.low++; });
+  var sups=Object.keys(g).map(function(k){ return g[k]; }).sort(function(a,b){ return (b.out-a.out)||(b.low-a.low)||a.sup.localeCompare(b.sup); });
+  var nOut=items.filter(function(i){return i.status==='หมด';}).length, nLow=items.filter(function(i){return i.status==='ใกล้หมด';}).length;
+  var notYet=sups.filter(function(x){ var o=ordInfo(x.sup); return (x.out||x.low)&&!(o&&o.recent); }).length;
+  var h='<div class="card"><div class="stgrid">'+
+    '<div class="stc"><b>บริษัทที่ต้องดู</b><span class="big b">'+sups.length+'</span></div>'+
+    '<div class="stc no"><b>สินค้าหมด</b><span class="big rd">'+nOut+'</span></div>'+
+    '<div class="stc"><b>ใกล้หมด (&lt; '+r.cover+' วัน)</b><span class="big" style="color:#c77700">'+nLow+'</span></div>'+
+    '<div class="stc '+(notYet?'no':'ok')+'"><b>บริษัทที่ยังไม่สั่ง</b><span class="big">'+notYet+'</span></div></div>'+
+    '<div class="muted" style="margin-top:8px">STOCK ณ '+esc(r.stockAsOf||'-')+' · ยอดขาย '+r.start+' – '+r.end+' (มีข้อมูล '+r.effDays+' วัน)'+(r.hasSales?'':' · <span class="err">ยังไม่มีข้อมูลยอดขาย POS/ImedX — สถานะคิดจากจำนวนคงเหลือเท่านั้น</span>')+
+    ' · พอขาย = คงเหลือ ÷ ยอดขายเฉลี่ยต่อวัน · แนะนำสั่ง = (MAX ถ้ามี หรือ ยอดขาย '+(r.cover*2)+' วัน) − คงเหลือ · ซ่อนสินค้าที่ไม่มีของและไม่มียอดขาย '+n0(r.dead)+' รายการ</div></div>';
+  if(!sups.length) h+='<div class="card empty">ไม่มีรายการตามเงื่อนไข</div>';
+  sups.forEach(function(x,gi){
+    var o=ordInfo(x.sup), ow=Object.keys(x.owners).join(', ')||'<span class="err">ยังไม่กำหนดผู้ดูแล</span>';
+    var st=o?(o.recent?'<span class="ok"><b>✓ สั่งแล้ว '+o.text+'</b> ('+esc(o.o.by)+')</span>':'<span class="muted">สั่งล่าสุด '+o.text+'</span>'):'<span class="err"><b>ยังไม่สั่ง</b></span>';
+    h+='<div class="card" style="padding:12px"><div class="bar" style="margin:0;justify-content:space-between;cursor:pointer" onclick="var t=document.getElementById(\'ps'+gi+'\');t.hidden=!t.hidden">'+
+      '<span><b style="font-size:16px">'+esc(x.sup||'-')+(x.name?' · '+esc(x.name):'')+'</b> <span class="muted">ผู้ดูแล: </span>'+ow+'</span>'+
+      '<span><span class="rd"><b>หมด '+x.out+'</b></span> · <span style="color:#c77700"><b>ใกล้หมด '+x.low+'</b></span> · '+x.items.length+' รายการ · '+st+' '+
+      (o&&o.recent?'<button class="btn alt" onclick="event.stopPropagation();markOrd(\''+x.sup+'\',false)">ยกเลิก</button>':'<button class="btn green" onclick="event.stopPropagation();markOrd(\''+x.sup+'\',true)">✓ สั่งแล้ว</button>')+' ▾</span></div>'+
+      '<div id="ps'+gi+'"'+(gi<5?'':' hidden')+'><table class="list auto" style="margin-top:8px"><tr><th>รหัส</th><th>สินค้า</th><th>หน่วย</th><th class="num">คงเหลือ</th><th class="num">ขาย '+r.effDays+' วัน</th><th class="num">เฉลี่ย/วัน</th><th class="num">พอขาย (วัน)</th><th>สถานะ</th><th class="num">แนะนำสั่ง</th></tr>'+
+      x.items.sort(function(a,b){ return (a.status==='หมด'?0:a.status==='ใกล้หมด'?1:2)-(b.status==='หมด'?0:b.status==='ใกล้หมด'?1:2)||b.sold-a.sold; }).map(function(i){
+        var c=i.status==='หมด'?'rd':i.status==='ใกล้หมด'?'':'muted';
+        return '<tr><td>'+esc(i.code)+'</td><td>'+esc(i.name)+'</td><td>'+esc(i.unit)+'</td><td class="num '+(i.qty<=0?'rd':'')+'"><b>'+n0(i.qty)+'</b></td><td class="num">'+n0(i.sold)+'</td><td class="num">'+i.avg+'</td><td class="num">'+(i.cover==null?'-':i.cover)+'</td><td class="'+c+'" style="'+(i.status==='ใกล้หมด'?'color:#c77700':'')+'"><b>'+i.status+'</b></td><td class="num"><b>'+(i.suggest?n0(i.suggest):'')+'</b></td></tr>';
+      }).join('')+'</table></div></div>';
+  });
+  $('pOut').innerHTML=h;
+}
+function markOrd(sup,on){
+  var note=on?'':'';
+  run('markOrdered',sup,on,note).then(function(o){ state.purchase.orders[sup]=o; renderPurchase(); toast(on?'บันทึก "สั่งแล้ว" — '+sup:'ยกเลิกสถานะแล้ว'); }).catch(fail());
+}
+function dlPurchase(){
+  var r=state.purchase; if(!r) return;
+  if(typeof XLSX==='undefined'){ toast('โหลดตัวสร้าง Excel ไม่สำเร็จ ลองรีเฟรชหน้า'); return; }
+  var items=purFiltered().sort(function(a,b){ return a.sup.localeCompare(b.sup)||a.code.localeCompare(b.code); });
+  var H='0b5394', rows=[[{v:'รายงานสั่งซื้อ Pet Shop · STOCK ณ '+r.stockAsOf+' · ยอดขาย '+r.start+' – '+r.end,s:xs(null,true,13,null,'left')}],[]];
+  var head=['รหัสบริษัท','ชื่อบริษัท','ผู้ดูแล','รหัสสินค้า','สินค้า','Barcode','หน่วย','คงเหลือ','ขาย '+r.effDays+' วัน','เฉลี่ย/วัน','พอขาย (วัน)','สถานะ','แนะนำสั่ง','จำนวนสั่งจริง'];
+  rows.push(head.map(function(t){ return {v:t,s:xs('cfe2f3',true)}; }));
+  items.forEach(function(i){ var bg=i.status==='หมด'?'fde2e2':i.status==='ใกล้หมด'?'fff2cc':null;
+    rows.push([i.sup,i.supName,i.owner,i.code,i.name,i.barcode,i.unit,i.qty,i.sold,i.avg,i.cover==null?'':i.cover,i.status,i.suggest||'',''].map(function(v,k){ return {v:v,s:xs(bg,k===11,10,null,k===4?'left':'center')}; })); });
+  var ws=sheetFrom(rows,[{s:{r:0,c:0},e:{r:0,c:13}}],[{wch:9},{wch:18},{wch:14},{wch:15},{wch:46},{wch:15},{wch:8},{wch:9},{wch:9},{wch:9},{wch:10},{wch:9},{wch:10},{wch:12}]);
+  var wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'สั่งซื้อ');
+  XLSX.writeFile(wb,'รายงานสั่งซื้อ_'+today()+'.xlsx');
+}
+/* ตั้งค่าผู้ดูแลหมวด / ชื่อบริษัท (หัวหน้างาน) */
+function openPurCfg(){
+  var el=$('pCfg'); el.hidden=!el.hidden; if(el.hidden) return;
+  el.innerHTML='<div class="empty">กำลังโหลด...</div>';
+  run('getPurchaseConfig').then(function(c){
+    state.purCfg=c;
+    var dl='<datalist id="ownOpts">'+c.staff.map(function(x){ return '<option value="'+esc(x)+'">'; }).join('')+'</datalist>';
+    var h=dl+'<b style="font-size:16px">ผู้ดูแลแต่ละหมวด</b><div class="stgrid" style="margin:8px 0 16px">'+c.cats.map(function(k){ return '<label class="stc"><b>'+(k==='2'?'2-':k)+'</b><input list="ownOpts" class="pco" data-k="'+k+'" value="'+esc(c.owners[k]||'')+'" placeholder="เลือก/พิมพ์ชื่อ" style="width:100%"></label>'; }).join('')+'</div>'+
+      '<b style="font-size:16px">ชื่อบริษัท (รหัสกลางของรหัสสินค้า เช่น A01-<u>223</u>-02)</b> <input id="supQ" placeholder="ค้นหารหัส/ชื่อ" oninput="filterSup()" style="margin-left:8px">'+
+      '<div class="scroll" style="max-height:380px;overflow:auto;margin-top:8px"><table class="edit" id="supTbl"><tr><th>รหัสบริษัท</th><th>จำนวนสินค้า</th><th>ชื่อบริษัท</th><th>ผู้ดูแล (ถ้าต่างจากหมวด)</th></tr>'+
+      c.supCodes.map(function(k){ var x=c.sups[k]||{}; return '<tr data-k="'+k+'"><td><b>'+k+'</b></td><td style="text-align:center">'+c.supCount[k]+'</td><td><input class="psn" value="'+esc(x.name||'')+'"></td><td><input class="pso" list="ownOpts" value="'+esc(x.owner||'')+'"></td></tr>'; }).join('')+'</table></div>'+
+      '<div class="bar" style="margin-top:10px"><button class="btn" onclick="savePurCfgUI(this)">บันทึกการตั้งค่า</button><button class="btn alt" onclick="$(\'pCfg\').hidden=true">ปิด</button></div>';
+    el.innerHTML=h;
+  }).catch(fail(el));
+}
+function filterSup(){ var q=$('supQ').value.trim().toLowerCase(); document.querySelectorAll('#supTbl tr[data-k]').forEach(function(tr){ tr.hidden=q && (tr.dataset.k+' '+tr.querySelector('.psn').value).toLowerCase().indexOf(q)<0; }); }
+function savePurCfgUI(b){
+  var owners={}, sups={};
+  document.querySelectorAll('.pco').forEach(function(i){ owners[i.dataset.k]=i.value.trim(); });
+  document.querySelectorAll('#supTbl tr[data-k]').forEach(function(tr){ sups[tr.dataset.k]={name:tr.querySelector('.psn').value.trim(),owner:tr.querySelector('.pso').value.trim()}; });
+  b.disabled=true;
+  run('savePurchaseConfig',owners,sups).then(function(){ b.disabled=false; toast('บันทึกแล้ว'); $('pCfg').hidden=true; loadPurchase(); }).catch(function(e){ b.disabled=false; fail()(e); });
+}
+
+/* =============== ตู้เก็บสินค้า =============== */
+function cabsEnter(){
+  if(CAB_ID){ var id=CAB_ID; CAB_ID=''; openCab(id); return; }
+  if(!state.cv) state.cv='list';
+  cabView(state.cv);
+}
+function cabView(v){
+  state.cv=v;
+  document.querySelectorAll('#cSub button[data-v]').forEach(function(b){ b.className='btn'+(b.dataset.v===v?'':' alt'); });
+  if(v==='list') loadCabs(); else if(v==='refill') loadRefill(); else if(v==='shelf') loadShelf(); else if(v==='qr') loadQr();
+}
+function img(u,size){ return u?'<img src="'+esc(u)+'" style="width:'+size+'px;height:'+size+'px;object-fit:cover;border-radius:8px;border:1px solid #ddd" onerror="this.style.display=\'none\'">':'<div style="width:'+size+'px;height:'+size+'px;border-radius:8px;background:#eef1f5;display:flex;align-items:center;justify-content:center;color:#aab">📦</div>'; }
+function bcSvg(v){ return v?'<svg class="bcs" data-v="'+esc(v)+'"></svg>':'<span class="muted">ไม่มี Barcode</span>'; }
+function drawBarcodes(root){
+  if(typeof JsBarcode==='undefined') { (root||document).querySelectorAll('svg.bcs').forEach(function(s){ s.outerHTML='<code>'+esc(s.dataset.v)+'</code>'; }); return; }
+  (root||document).querySelectorAll('svg.bcs').forEach(function(s){ try{ JsBarcode(s,s.dataset.v,{format:'CODE128',height:34,width:1.3,fontSize:11,margin:2}); }catch(e){ s.outerHTML='<code>'+esc(s.dataset.v)+'</code>'; } });
+}
+function loadCabs(){
+  var el=$('cOut'); loading(el);
+  run('getCabinets').then(function(r){
+    state.cabsData=r;
+    var h='<div class="bar">'+(state.isAdmin?'<button class="btn" onclick="editCab()">+ เพิ่มตู้</button>':'')+'<span class="muted">กดที่ตู้เพื่อดูของในตู้ / สแกนเข้า-ออก · ติด QR ที่ตู้ แล้วใช้มือถือสแกนเปิดหน้าตู้ได้ทันที</span></div>';
+    if(!r.cabs.length) h+='<div class="card empty">ยังไม่มีตู้'+(state.isAdmin?' — กด "+ เพิ่มตู้"':' — ให้หัวหน้างานเพิ่มตู้')+'</div>';
+    h+='<div class="stgrid" style="grid-template-columns:repeat(auto-fill,minmax(230px,1fr))">'+r.cabs.map(function(c){
+      return '<div class="card" style="cursor:pointer;margin:0" onclick="openCab(\''+esc(c.id)+'\')">'+(c.photo?'<img src="'+esc(c.photo)+'" style="width:100%;height:150px;object-fit:cover;border-radius:8px">':'<div style="height:150px;border-radius:8px;background:#eef1f5;display:flex;align-items:center;justify-content:center;font-size:40px">🗄</div>')+
+        '<div style="margin-top:8px"><b style="font-size:16px">'+esc(c.name)+'</b> <span class="muted">'+esc(c.id)+'</span><br><span class="muted">'+esc(c.loc||'')+'</span><br>สินค้า <b>'+c.items+'</b> รายการ · <b>'+n0(c.qty)+'</b> ชิ้น</div></div>';
+    }).join('')+'</div>';
+    $('cOut').innerHTML=h;
+  }).catch(fail(el));
+}
+function editCab(c){
+  c=c||{}; $('cabMdT').textContent=c.id?'แก้ไขตู้ '+c.id:'เพิ่มตู้';
+  $('cbId').value=c.id||''; $('cbId').disabled=!!c.id; $('cbName').value=c.name||''; $('cbLoc').value=c.loc||''; $('cbPhoto').value=c.photo||''; $('cbNote').value=c.note||''; $('cbEr').textContent='';
+  $('cabMd').classList.add('on');
+}
+function saveCabUI(){
+  if(!$('cbName').value.trim()){ $('cbEr').textContent='กรุณาใส่ชื่อตู้'; return; }
+  run('saveCabinet',{id:$('cbId').value,name:$('cbName').value,loc:$('cbLoc').value,photo:$('cbPhoto').value,note:$('cbNote').value}).then(function(d){ closeMd('cabMd'); toast('บันทึกตู้แล้ว'); renderCab(d); }).catch(function(e){ $('cbEr').textContent=e.message||e; });
+}
+function openCab(id){ state.cv='cab'; document.querySelectorAll('#cSub button[data-v]').forEach(function(b){ b.className='btn alt'; }); loading($('cOut')); run('getCabinet',id).then(renderCab).catch(fail($('cOut'))); }
+function cabUrl(id){ var u=(state.cabsData&&state.cabsData.url)||state.webUrl||''; return u?u+'?page=cab&cab='+encodeURIComponent(id):''; }
+function renderCab(d){
+  state.cab=d; if(d.url) state.webUrl=d.url;
+  var c=d.cab, tot=d.items.reduce(function(a,x){return a+x.qty;},0);
+  var h='<div class="bar"><button class="btn alt" onclick="cabView(\'list\')">← ตู้ทั้งหมด</button>'+(state.isAdmin?'<button class="btn alt" onclick="editCab(state.cab.cab)">✏ แก้ไขตู้</button><button class="btn alt" onclick="delCab()">ลบตู้</button>':'')+'</div>'+
+    '<div class="card" style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">'+
+      '<div style="width:220px">'+(c.photo?'<img src="'+esc(c.photo)+'" style="width:220px;height:165px;object-fit:cover;border-radius:10px">':'<div style="width:220px;height:165px;border-radius:10px;background:#eef1f5;display:flex;align-items:center;justify-content:center;font-size:44px">🗄</div>')+
+        '<button class="btn alt" style="width:100%;margin-top:6px" onclick="changeCabPhoto()">📷 เปลี่ยนรูปตู้</button></div>'+
+      '<div style="flex:1;min-width:240px"><div style="font-size:22px;font-weight:700">'+esc(c.name)+' <span class="muted" style="font-size:14px">'+esc(c.id)+'</span></div><div class="muted">'+esc(c.loc||'')+' '+esc(c.note||'')+'</div>'+
+        '<div style="margin:6px 0">สินค้า <b>'+d.items.length+'</b> รายการ · <b>'+n0(tot)+'</b> ชิ้น</div>'+
+        '<div class="card" style="background:#f7faff;margin:10px 0 0;padding:12px"><b>สแกนสินค้าเข้า / ออกตู้</b>'+
+          '<div class="bar" style="margin:8px 0 0"><input id="scanIn" placeholder="สแกน Barcode / พิมพ์ 5 ตัวท้าย / รหัสสินค้า" style="flex:1;min-width:200px;font-size:16px;padding:10px" onkeydown="if(event.key===\'Enter\')scanLookup()">'+
+          '<button class="btn alt" onclick="startCam()">📷 กล้อง</button><button class="btn" onclick="scanLookup()">ค้นหา</button></div><div id="scanRes"></div></div></div>'+
+      '<div style="text-align:center"><div id="cabQr" style="width:130px;height:130px;margin:auto"></div><div class="muted" style="font-size:11px;margin-top:4px">QR เปิดหน้าตู้นี้</div></div>'+
+    '</div>';
+  h+='<div class="card"><b style="font-size:16px">ของในตู้</b>';
+  if(!d.items.length) h+='<div class="empty">ยังไม่มีสินค้าในตู้ — สแกน Barcode ด้านบนเพื่อนำเข้าตู้</div>';
+  else h+='<table class="list auto" style="margin-top:8px"><tr><th style="width:62px">รูป</th><th>สินค้า</th><th>Barcode</th><th class="num">ในตู้นี้</th><th class="num">คงเหลือตอนนี้<br><span class="muted" style="font-weight:400">STOCK − ขาย</span></th><th class="num">ในตู้ทั้งหมด</th><th class="num">หน้าเชลฟ์<br><span class="muted" style="font-weight:400">ตอนนี้ / วางได้</span></th><th style="width:200px"></th></tr>'+
+    d.items.map(function(x){ return '<tr><td>'+img(x.img,52)+'</td><td><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.code)+' · '+esc(x.unit)+'</span><br><span class="muted" style="font-size:11px">'+esc(x.upd)+' '+esc(x.by)+'</span></td><td>'+bcSvg(x.barcode)+'</td>'+
+      '<td class="num"><b style="font-size:18px">'+n0(x.qty)+'</b>'+(x.over?'<br><span class="err" style="font-size:11px">เกินคงเหลือ '+x.over+'</span>':'')+'</td>'+
+      '<td class="num">'+(x.stock==null?'-':'<b>'+n0(x.stock)+'</b><br><span class="muted" style="font-size:11px">'+n0(x.snap)+' − '+n0(x.soldSince)+'</span>')+'</td><td class="num">'+n0(x.inCabAll)+'</td>'+
+      '<td class="num">'+(x.shelfNow==null?'-':'<b>'+n0(x.shelfNow)+'</b>')+' / '+(x.cap||'<span class="muted">-</span>')+'</td>'+
+      '<td><button class="btn alt" onclick="cabQty(\''+esc(x.code)+'\',1)">＋</button> <button class="btn alt" onclick="cabQty(\''+esc(x.code)+'\',-1)">－</button> <button class="btn alt" onclick="cabSet(\''+esc(x.code)+'\','+x.qty+')">แก้จำนวน</button></td></tr>'; }).join('')+'</table>';
+  h+=stockNote(d.stockInfo)+'</div>';
+  $('cOut').innerHTML=h; drawBarcodes($('cOut'));
+  var u=cabUrl(c.id);
+  if(u && typeof QRCode!=='undefined'){ new QRCode($('cabQr'),{text:u,width:130,height:130}); } else $('cabQr').innerHTML='<div class="muted" style="font-size:11px">'+(u?'โหลด QR ไม่สำเร็จ':'Deploy เว็บแอปก่อน')+'</div>';
+}
+function changeCabPhoto(){ pickImage(function(u){ var c=state.cab.cab; run('saveCabinet',{id:c.id,name:c.name,loc:c.loc,photo:u,note:c.note}).then(function(d){ renderCab(d); toast('เปลี่ยนรูปตู้แล้ว'); }).catch(fail()); }); }
+function delCab(){ var c=state.cab.cab; if(!confirm('ลบตู้ '+c.name+' ?')) return; run('deleteCabinet',c.id).then(function(){ toast('ลบตู้แล้ว'); cabView('list'); }).catch(fail()); }
+function stockNote(si){
+  if(!si) return '';
+  var u=si.until?dText(si.until.slice(0,10))+' '+si.until.slice(11):'';
+  return '<div class="muted" style="margin-top:6px;font-size:12px">📦 STOCK ณ <b>'+esc(si.asOf||'-')+'</b> หักยอดขาย POS + ImedX หลังเวลานั้น'+(u?' ถึง <b>'+esc(u)+'</b>':' (ยังไม่มีข้อมูลขายหลังเวลานั้น)')+'</div>';
+}
+function stockBreak(p,here){
+  if(p.stock==null) return '<div class="err" style="font-size:12px;margin-top:4px">ไม่พบในไฟล์ STOCK</div>';
+  var now=Math.max(0,Math.floor(p.stock));
+  return '<table class="r" style="margin-top:6px;width:auto;font-size:12px"><tr><th>STOCK ณ '+esc((p.stockInfo||{}).asOf||'')+'</th><th>ขายหลังจากนั้น</th><th>คงเหลือตอนนี้</th><th>ในตู้ทั้งหมด</th><th>หน้าเชลฟ์</th><th>ในตู้นี้</th></tr>'+
+    '<tr><td>'+n0(p.snap)+'</td><td class="rd">− '+n0(p.soldSince)+'</td><td><b>'+n0(now)+'</b></td><td>'+n0(p.inCab)+'</td><td class="b"><b>'+n0(p.shelfNow)+'</b>'+(p.cap?' / '+p.cap:'')+'</td><td><b>'+here+'</b></td></tr></table>'+
+    (p.over?'<div class="err" style="font-size:12px">ในตู้มากกว่าคงเหลือ '+p.over+' ชิ้น — ขายเกินหน้าเชลฟ์ (หยิบจากตู้ไปขาย) หรือของที่โอนเข้ายังไม่เข้าระบบ</div>':'');
+}
+function scanLookup(v){
+  var q=v||$('scanIn').value.trim(); if(!q) return;
+  $('scanRes').innerHTML='<div class="muted" style="margin-top:8px">กำลังค้นหา...</div>';
+  run('lookupProduct',q).then(function(p){
+    if(p.multi){
+      state.multi=p.multi;
+      $('scanRes').innerHTML='<div style="margin-top:8px"><b>พบ '+p.multi.length+' รายการที่ลงท้ายด้วย "'+esc(p.q)+'"</b> — เลือกสินค้า</div><table class="list auto" style="margin-top:6px">'+
+        p.multi.map(function(m,i){ return '<tr style="cursor:pointer" onclick="scanLookup(state.multi['+i+'].code)"><td style="width:56px">'+img(m.img,44)+'</td><td><b>'+esc(m.name)+'</b><br><span class="muted">'+esc(m.code)+' · '+esc(m.barcode||'-')+'</span></td><td class="num">คงเหลือ '+(m.stock==null?'-':n0(m.stock))+'</td></tr>'; }).join('')+'</table>';
+      return;
+    }
+    state.scanP=p;
+    var other=p.where.filter(function(w){ return w.cab!==state.cab.cab.id; }).map(function(w){ return w.cab+' ('+w.qty+')'; }).join(', ');
+    var here=(p.where.filter(function(w){ return w.cab===state.cab.cab.id; })[0]||{qty:0}).qty;
+    $('scanRes').innerHTML='<div style="display:flex;gap:12px;align-items:center;margin-top:10px;flex-wrap:wrap">'+img(p.img,70)+'<div style="flex:1;min-width:200px"><b>'+esc(p.name)+'</b><br><span class="muted">'+esc(p.code)+(other?' · ตู้อื่น: '+esc(other):'')+'</span><br>'+bcSvg(p.barcode)+stockBreak(p,here)+'</div>'+
+      '<div><input type="number" id="scanQty" value="1" min="1" style="width:80px;font-size:18px;text-align:center"><br><button class="btn green" style="margin-top:4px" onclick="scanMove(1)">＋ โอนเข้าตู้</button> <button class="btn alt" style="margin-top:4px" onclick="scanMove(-1)">－ หยิบไปหน้าเชลฟ์</button>'+
+      '<br><button class="btn alt" style="margin-top:4px" onclick="setShelfCap(state.scanP)">🏷 ตั้งหน้าเชลฟ์ / รูปสินค้า</button></div></div>';
+    drawBarcodes($('scanRes'));
+  }).catch(function(e){ $('scanRes').innerHTML='<div class="err" style="margin-top:8px">'+esc(e.message||e)+'</div>'; });
+}
+function scanMove(sign){
+  var p=state.scanP, n=Number($('scanQty').value)||0; if(!p||n<=0) return;
+  run('cabMove',state.cab.cab.id,p.code,sign*n,'','').then(function(d){ renderCab(d); toast((sign>0?'โอนเข้าตู้ ':'หยิบไปหน้าเชลฟ์ ')+n+' — '+p.name); setTimeout(function(){ var i=$('scanIn'); if(i) i.focus(); },50); }).catch(fail());
+}
+function cabQty(code,d){ run('cabMove',state.cab.cab.id,code,d,'','').then(renderCab).catch(fail()); }
+function cabSet(code,cur){ var v=prompt('จำนวนในตู้ (นับจริง)',cur); if(v===null) return; run('cabMove',state.cab.cab.id,code,0,'',v).then(renderCab).catch(fail()); }
+/* กล้องสแกน */
+var camObj=null;
+function startCam(){
+  $('camEr').textContent=''; $('camReader').innerHTML=''; $('camMd').classList.add('on');
+  if(typeof Html5Qrcode==='undefined'){ $('camEr').textContent='โหลดตัวสแกนไม่สำเร็จ — ใช้ "ถ่ายรูป Barcode แทน" หรือพิมพ์รหัส'; return; }
+  try{
+    camObj=new Html5Qrcode('camReader');
+    camObj.start({facingMode:'environment'},{fps:10,qrbox:{width:260,height:140}},function(txt){ stopCam(); gotScan(txt); },function(){})
+      .catch(function(){ $('camEr').textContent='เปิดกล้องสดไม่ได้ในหน้านี้ — กด "ถ่ายรูป Barcode แทน" ได้เลย'; });
+  }catch(e){ $('camEr').textContent='เปิดกล้องไม่ได้ — กด "ถ่ายรูป Barcode แทน"'; }
+}
+function stopCam(){ closeMd('camMd'); if(camObj){ try{ camObj.stop().catch(function(){}); }catch(e){} camObj=null; } }
+function scanFile(inp){
+  var f=inp.files[0]; inp.value=''; if(!f) return;
+  if(typeof Html5Qrcode==='undefined'){ $('camEr').textContent='โหลดตัวสแกนไม่สำเร็จ'; return; }
+  var h=new Html5Qrcode('camReader');
+  h.scanFile(f,false).then(function(txt){ stopCam(); gotScan(txt); }).catch(function(){ $('camEr').textContent='อ่าน Barcode จากรูปไม่ได้ ลองถ่ายให้ใกล้และชัดขึ้น'; });
+}
+function gotScan(txt){
+  if(state.scanTarget){ var cb=state.scanTarget; state.scanTarget=null; cb(txt); return; }
+  if($('scanIn')){ $('scanIn').value=txt; scanLookup(txt); }
+}
+/* รูปภาพ: ย่อแล้วอัปโหลด Drive */
+function pickImage(cb){
+  var i=document.createElement('input'); i.type='file'; i.accept='image/*';
+  i.onchange=function(){ var f=i.files[0]; if(!f) return; toast('กำลังอัปโหลดรูป...');
+    var rd=new FileReader(); rd.onload=function(){ var im=new Image(); im.onload=function(){
+      var k=Math.min(1,1280/Math.max(im.width,im.height)), c=document.createElement('canvas'); c.width=im.width*k; c.height=im.height*k; c.getContext('2d').drawImage(im,0,0,c.width,c.height);
+      run('uploadPhoto',c.toDataURL('image/jpeg',0.85).split(',')[1],'image/jpeg',f.name.replace(/\.\w+$/,'')+'.jpg').then(function(u){ toast('อัปโหลดรูปแล้ว'); cb(u); }).catch(fail());
+    }; im.src=rd.result; }; rd.readAsDataURL(f); };
+  i.click();
+}
+/* หน้าเชลฟ์ */
+function setShelfCap(p){
+  var v=prompt('หน้าเชลฟ์วางได้กี่ชิ้น — '+p.name,p.cap||''); if(v===null) return;
+  var u=prompt('ลิงก์รูปสินค้า (เว้นว่างได้ / ใส่ "อัปโหลด" เพื่อถ่ายรูป)',p.img||''); if(u===null) return;
+  var go=function(link){ run('saveShelf',p.code,v,link).then(function(np){ toast('บันทึกหน้าเชลฟ์แล้ว'); state.shelfList=null; if(state.cv==='shelf') loadShelf(); else if(state.cab){ scanLookup(np.code); } }).catch(fail()); };
+  if(u.trim()==='อัปโหลด') pickImage(go); else go(u.trim());
+}
+function loadShelf(){
+  var el=$('cOut'); loading(el);
+  run('getShelfList').then(function(list){
+    state.shelfList=list;
+    var h='<div class="card"><b style="font-size:16px">ตั้งค่าหน้าเชลฟ์</b><div class="muted" style="margin:4px 0 8px">กำหนดว่าหน้าเชลฟ์วางสินค้าแต่ละตัวได้กี่ชิ้น · ระบบถือว่า หน้าเชลฟ์ = STOCK ในระบบ − ของในตู้ แล้วคำนวณว่าต้องหยิบจากตู้มาเติมเท่าไร</div>'+
+      '<div class="bar"><input id="shQ" placeholder="ค้นหา ชื่อ / รหัส / Barcode (5 ตัวท้ายได้)" style="min-width:260px" onkeydown="if(event.key===\'Enter\')shelfSearch()"><button class="btn" onclick="shelfSearch()">ค้นหา</button><button class="btn alt" onclick="state.scanTarget=function(t){ $(\'shQ\').value=t; shelfSearch(); }; startCam();">📷 สแกน</button></div><div id="shRes"></div></div>';
+    h+='<div class="card"><b>สินค้าที่ตั้งหน้าเชลฟ์แล้ว ('+list.length+')</b>'+(list.length?'<table class="list auto" style="margin-top:8px"><tr><th style="width:62px">รูป</th><th>สินค้า</th><th>Barcode</th><th class="num">STOCK ระบบ</th><th class="num">วางได้</th><th></th></tr>'+
+      list.map(function(p,i){ return '<tr><td>'+img(p.img,52)+'</td><td><b>'+esc(p.name)+'</b><br><span class="muted">'+esc(p.code)+'</span></td><td>'+bcSvg(p.barcode)+'</td><td class="num">'+(p.stock==null?'-':n0(p.stock))+'</td><td class="num"><b>'+p.cap+'</b></td><td><button class="btn alt" onclick="setShelfCap(state.shelfList['+i+'])">แก้ไข</button></td></tr>'; }).join('')+'</table>':'<div class="empty">ยังไม่มี</div>')+'</div>';
+    $('cOut').innerHTML=h; drawBarcodes($('cOut'));
+  }).catch(fail(el));
+}
+function shelfSearch(){
+  var q=$('shQ').value.trim(); if(!q) return;
+  $('shRes').innerHTML='<div class="muted">กำลังค้นหา...</div>';
+  var done=function(list){ state.shRes=list; $('shRes').innerHTML=list.length?'<table class="list auto" style="margin-top:8px">'+list.map(function(p,i){ return '<tr><td style="width:62px">'+img(p.img,46)+'</td><td><b>'+esc(p.name)+'</b><br><span class="muted">'+esc(p.code)+' · STOCK '+(p.stock==null?'-':n0(p.stock))+(p.cap?' · วางได้ '+p.cap:'')+'</span></td><td style="width:150px"><button class="btn" onclick="setShelfCap(state.shRes['+i+'])">ตั้งหน้าเชลฟ์</button></td></tr>'; }).join('')+'</table>':'<div class="muted">ไม่พบสินค้า</div>'; };
+  if(/^\d{3,}$/.test(q)) run('lookupProduct',q).then(function(p){ done(p.multi||[p]); }).catch(function(){ run('searchProducts',q).then(done).catch(fail()); });
+  else run('searchProducts',q).then(done).catch(fail());
+}
+/* แผนเติมของ */
+function loadRefill(){
+  var el=$('cOut'); loading(el);
+  run('getRefillPlan').then(function(r){
+    state.refill=r;
+    var n=r.groups.reduce(function(a,g){return a+g.items.length;},0);
+    var h='<div class="card"><b style="font-size:18px">แผนเติมของหน้าเชลฟ์</b>'+stockNote(r.stockInfo)+
+      '<div class="muted" style="margin-top:4px">คงเหลือตอนนี้ = STOCK ณ เวลาอัปเดต − ยอดขายหลังจากนั้น · หน้าเชลฟ์ = คงเหลือตอนนี้ − ของในตู้ · ต้องเติม = วางได้ − หน้าเชลฟ์ · หยิบเสร็จติ๊ก แล้วกด "ยืนยันเติมของ" ระบบจะหักของออกจากตู้</div></div>';
+    if(r.over.length) h+='<div class="card" style="border:2px solid #f5c2c2"><b class="err">ของในตู้มากกว่าคงเหลือตอนนี้ ('+r.over.length+' รายการ)</b><div class="muted">แปลว่าขายเกินหน้าเชลฟ์และหยิบของจากตู้ไปขายแล้ว — กดปรับเพื่อตัดยอดในตู้ให้ตรงระบบ</div>'+
+      '<table class="list auto" style="margin-top:8px"><tr><th>สินค้า</th><th class="num">คงเหลือตอนนี้</th><th class="num">ในตู้</th><th class="num">ต้องตัดออก</th><th>อยู่ที่ตู้</th></tr>'+r.over.map(function(o){ return '<tr><td><b>'+esc(o.name)+'</b><br><span class="muted">'+esc(o.code)+'</span></td><td class="num">'+o.stock+'</td><td class="num">'+o.inCab+'</td><td class="num rd"><b>'+o.diff+'</b></td><td>'+o.cabs.map(function(c){return esc(c.cab)+' ('+c.qty+')';}).join(', ')+'</td></tr>'; }).join('')+
+      '</table><button class="btn" style="margin-top:8px;background:#c0392b" onclick="syncCab()">ปรับยอดในตู้ให้ตรงระบบ</button></div>';
+    if(!n) h+='<div class="card empty">ไม่มีของต้องเติมจากตู้ 🎉'+(r.over.length?'':' (หรือยังไม่ได้ตั้ง "หน้าเชลฟ์วางได้")')+'</div>';
+    r.groups.forEach(function(g,gi){
+      h+='<div class="card"><div style="display:flex;gap:12px;align-items:center">'+(g.cab.photo?'<img src="'+esc(g.cab.photo)+'" style="width:90px;height:68px;object-fit:cover;border-radius:8px">':'<div style="font-size:34px">🗄</div>')+
+        '<div><b style="font-size:18px">'+esc(g.cab.name)+'</b> <span class="muted">'+esc(g.cab.id)+' · '+esc(g.cab.loc||'')+'</span><br>หยิบ <b>'+g.items.length+'</b> รายการ · <b>'+g.items.reduce(function(a,x){return a+x.take;},0)+'</b> ชิ้น</div></div>'+
+        '<table class="list auto" style="margin-top:8px"><tr><th style="width:36px">✓</th><th style="width:62px">รูป</th><th>สินค้า</th><th>Barcode</th><th class="num">หยิบ</th><th class="num">หน้าเชลฟ์ตอนนี้ / วางได้</th><th class="num">ในตู้</th></tr>'+
+        g.items.map(function(x,i){ return '<tr><td><input type="checkbox" class="rfk" data-g="'+gi+'" data-i="'+i+'" style="width:22px;height:22px"></td><td>'+img(x.img,56)+'</td><td><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.code)+'</span></td><td>'+bcSvg(x.barcode)+'</td><td class="num"><b style="font-size:22px;color:#0b5394">'+x.take+'</b></td><td class="num">'+x.shelf+' / '+x.cap+'</td><td class="num">'+x.cabQty+'</td></tr>'; }).join('')+'</table></div>';
+    });
+    if(n) h+='<div class="bar"><button class="btn green" style="font-size:16px;padding:12px 20px" onclick="confirmRefill()">✓ ยืนยันเติมของที่ติ๊กแล้ว</button><button class="btn alt" onclick="document.querySelectorAll(\'.rfk\').forEach(function(c){c.checked=true;})">ติ๊กทั้งหมด</button></div>';
+    if(r.noCab.length) h+='<div class="card"><b style="color:#c77700">หน้าเชลฟ์ต้องเติม แต่ไม่มีของในตู้ ('+r.noCab.length+')</b><div class="muted">ต้องสั่งเพิ่ม หรือของอยู่ที่อื่นที่ยังไม่ได้สแกนเข้าตู้</div><table class="list auto" style="margin-top:8px"><tr><th>สินค้า</th><th class="num">STOCK ระบบ</th><th class="num">หน้าเชลฟ์ / วางได้</th><th class="num">ขาด</th></tr>'+
+      r.noCab.map(function(x){ return '<tr><td><b>'+esc(x.name)+'</b><br><span class="muted">'+esc(x.code)+'</span></td><td class="num">'+x.stock+'</td><td class="num">'+x.shelf+' / '+x.cap+'</td><td class="num rd"><b>'+x.need+'</b></td></tr>'; }).join('')+'</table></div>';
+    $('cOut').innerHTML=h; drawBarcodes($('cOut'));
+  }).catch(fail(el));
+}
+function confirmRefill(){
+  var r=state.refill, picks=[];
+  document.querySelectorAll('.rfk:checked').forEach(function(c){ var x=r.groups[+c.dataset.g].items[+c.dataset.i]; picks.push({cab:x.cab,code:x.code,take:x.take}); });
+  if(!picks.length){ toast('ติ๊กรายการที่หยิบแล้วก่อน'); return; }
+  if(!confirm('ยืนยันหยิบของ '+picks.length+' รายการออกจากตู้ไปหน้าเชลฟ์?')) return;
+  run('applyRefill',picks).then(function(m){ toast(m); loadRefill(); }).catch(fail());
+}
+function syncCab(){ if(!confirm('ตัดยอดในตู้ให้ไม่เกิน STOCK ในระบบ?')) return; run('syncCabinets',(state.refill.over||[]).map(function(o){return o.code;})).then(function(m){ toast(m); loadRefill(); }).catch(fail()); }
+/* พิมพ์ QR */
+function loadQr(){
+  var el=$('cOut'); loading(el);
+  run('getCabinets').then(function(r){
+    state.cabsData=r;
+    if(!r.url){ el.innerHTML='<div class="card empty">ต้อง Deploy เป็นเว็บแอปก่อน จึงจะสร้าง QR ได้</div>'; return; }
+    el.innerHTML='<div class="muted" style="margin-bottom:8px">กด "บันทึกเป็นรูป" แล้วนำไปพิมพ์ ติด QR ที่หน้าตู้ · สแกนด้วยกล้องมือถือจะเปิดหน้าตู้นั้นทันที (ต้องล็อกอินก่อน)</div><div class="stgrid" style="grid-template-columns:repeat(auto-fill,minmax(200px,1fr))">'+
+      r.cabs.map(function(c,i){ return '<div class="card" style="text-align:center;margin:0;border:2px dashed #0b5394"><div style="font-size:18px;font-weight:700">'+esc(c.name)+'</div><div id="qr'+i+'" style="width:160px;height:160px;margin:8px auto"></div><div class="muted">'+esc(c.id)+' · '+esc(c.loc||'')+'</div></div>'; }).join('')+'</div>';
+    r.cabs.forEach(function(c,i){ if(typeof QRCode!=='undefined') new QRCode($('qr'+i),{text:r.url+'?page=cab&cab='+encodeURIComponent(c.id),width:160,height:160}); else $('qr'+i).textContent='โหลด QR ไม่สำเร็จ'; });
+  }).catch(fail(el));
+}
+
+/* =============== ล็อกอิน / ผู้ใช้ =============== */
+function store(k,v){ try{ if(v==null) localStorage.removeItem(k); else localStorage.setItem(k,v); }catch(e){} }
+function load(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function closeMd(id){ $(id).classList.remove('on'); }
+function showLogin(msg){
+  state.token=null; state.me=null; store('tk',null); setAdmin(false);
+  $('lgEr').textContent=msg||''; $('lgPass').value=''; $('loginMd').classList.add('on');
+  setTimeout(function(){ ($('lgUser').value?$('lgPass'):$('lgUser')).focus(); },60);
+}
+function setAdmin(on){ document.querySelectorAll('.adm').forEach(function(b){ b.hidden=!on; }); state.isAdmin=!!on; }
+function afterLogin(me, first){
+  state.token=me.token||state.token; state.me=me; store('tk',state.token); store('lu',me.user);
+  $('loginMd').classList.remove('on');
+  $('admBtn').textContent='👤 '+me.name+(me.role==='admin'&&me.name!=='หัวหน้างาน'?' (หัวหน้างาน)':'');
+  setAdmin(me.role==='admin');
+  show(state.startTab||'upload'); state.startTab=null;
+  if(first && me.defaultPass){ openPw('คุณยังใช้รหัสผ่านเริ่มต้น (= รหัสพนักงาน) แนะนำให้เปลี่ยน'); }
+}
+function doLogin(){
+  var b=$('lgGo'); b.disabled=true; b.textContent='กำลังเข้าสู่ระบบ...'; $('lgEr').textContent='';
+  run('login',$('lgUser').value,$('lgPass').value).then(function(me){ b.disabled=false; b.textContent='เข้าสู่ระบบ'; afterLogin(me,true); })
+  .catch(function(e){ b.disabled=false; b.textContent='เข้าสู่ระบบ'; $('lgEr').textContent=e.message||e; $('lgPass').select();
+    var x=$('loginBx'); x.classList.remove('shake'); void x.offsetWidth; x.classList.add('shake'); });
+}
+function doLogout(){
+  if(state.rDirty && !confirm('ตารางเวรยังไม่ได้บันทึก ออกเลยไหม?')) return;
+  closeMd('menuMd'); run('logout',state.token).catch(function(){});
+  state={}; showLogin('ออกจากระบบแล้ว');
+}
+function openUserMenu(){ if(!state.me) return showLogin(); $('muName').textContent=state.me.name; $('muRole').textContent='Username: '+state.me.user+' · '+(state.me.role==='admin'?'หัวหน้างาน':'พนักงาน'); $('menuMd').classList.add('on'); }
+function openPw(note){ ['pwOld','pwNew','pwNew2'].forEach(function(i){ $(i).value=''; }); $('pwEr').textContent=''; $('pwNote').textContent=note||'ตั้งรหัสใหม่อย่างน้อย 4 ตัว'; $('pwMd').classList.add('on'); setTimeout(function(){ $('pwOld').focus(); },60); }
+function doChangePw(){
+  if($('pwNew').value!==$('pwNew2').value){ $('pwEr').textContent='รหัสใหม่ทั้งสองช่องไม่ตรงกัน'; return; }
+  run('changePassword',$('pwOld').value,$('pwNew').value).then(function(m){ closeMd('pwMd'); toast(m); }).catch(function(e){ $('pwEr').textContent=e.message||e; });
+}
+function initAuth(){
+  var u=load('lu'); if(u) $('lgUser').value=u;
+  var tk=load('tk');
+  if(!tk){ showLogin(); return; }
+  google.script.run.withSuccessHandler(function(me){ if(me){ me.token=tk; afterLogin(me,false); } else showLogin(); })
+    .withFailureHandler(function(){ showLogin(); }).whoami(tk);
+}
+
+/* ---------- จัดการผู้ใช้ (หัวหน้างาน) ---------- */
+function loadUsers(){ run('getUsers').then(renderUsers).catch(fail()); }
+function renderUsers(d){
+  state.users=d;
+  var h='<tr><th style="width:16%">Username (รหัสพนักงาน)</th><th>ชื่อ</th><th style="width:14%">สิทธิ์</th><th style="width:7%">ใช้งาน</th><th style="width:14%">ล็อกอินล่าสุด</th><th style="width:18%"></th></tr>';
+  d.users.forEach(function(u){ h+=userRow(u); });
+  $('userTbl').innerHTML=h;
+  var miss=d.staff.filter(function(s){ return !d.users.some(function(u){ return u.user===s.emp; }); });
+  $('userHint').textContent=miss.length?'มีพนักงาน '+miss.length+' คนที่มีรหัสพนักงานแต่ยังไม่มีบัญชี — กด "ดึงจากรายชื่อพนักงาน"':'';
+}
+function userRow(u){
+  return '<tr data-old="'+esc(u.user||'')+'"><td><input value="'+esc(u.user||'')+'" placeholder="2402"></td><td><input value="'+esc(u.name||'')+'" placeholder="อภิวัฒน์ ไสลสุข (อาร์ม)"></td>'+
+    '<td><select style="width:100%"><option value="staff"'+(u.role!=='admin'?' selected':'')+'>พนักงาน</option><option value="admin"'+(u.role==='admin'?' selected':'')+'>หัวหน้างาน</option></select></td>'+
+    '<td style="text-align:center"><input type="checkbox" style="width:auto" '+(u.active!==false?'checked':'')+'></td><td class="muted" style="text-align:center">'+esc(u.last||'-')+'</td>'+
+    '<td>'+(u.user?'<button class="btn alt" onclick="resetPw(\''+esc(u.user)+'\')">รีเซ็ตรหัส</button> ':'')+'<button class="btn alt" onclick="this.closest(\'tr\').remove()">ลบ</button></td></tr>';
+}
+function addUser(){ $('userTbl').insertAdjacentHTML('beforeend', userRow({role:'staff',active:true})); }
+function pullUsers(){
+  var d=state.users; if(!d) return; var have={};
+  [].slice.call($('userTbl').querySelectorAll('tr')).slice(1).forEach(function(tr){ have[tr.querySelector('input').value.trim()]=1; });
+  var n=0; d.staff.forEach(function(s){ if(!have[s.emp]){ $('userTbl').insertAdjacentHTML('beforeend', userRow({user:s.emp,name:s.name,role:'staff',active:true})); n++; } });
+  toast(n?'เพิ่ม '+n+' คน — กดบันทึกเพื่อสร้างบัญชี':'ทุกคนมีบัญชีแล้ว');
+}
+function saveUsersUI(b){
+  var list=[].slice.call($('userTbl').querySelectorAll('tr')).slice(1).map(function(tr){
+    var i=tr.querySelectorAll('input'); return {user:i[0].value,name:i[1].value,role:tr.querySelector('select').value,active:i[2].checked};
+  });
+  b.disabled=true;
+  run('saveUsers',list).then(function(d){ b.disabled=false; renderUsers(d); toast('บันทึกผู้ใช้แล้ว — ผู้ใช้ใหม่ใช้รหัสผ่าน = รหัสพนักงาน'); }).catch(function(e){ b.disabled=false; fail()(e); });
+}
+function resetPw(u){ if(!confirm('รีเซ็ตรหัสผ่านของ '+u+' กลับเป็นรหัสพนักงาน?')) return; run('resetPassword',u).then(toast).catch(fail()); }
+
+/* =============== ตารางเวร =============== */
+var DOW=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัส','ศุกร์','เสาร์'], DOWF=['อาทิตย์','จันทร์','อังคาร','พุธ','พฤหัสบดี','ศุกร์','เสาร์'];
+var TH_M=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+var BANDS=['#fadadd','#c9f2d3','#ffe6a6','#d6e9ff','#eadcf8'];
+function pad2(n){ return ('0'+n).slice(-2); }
+function kd(k){ var p=k.split('-'); return new Date(+p[0],p[1]-1,+p[2]); }
+function keyOf(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+function daysBetween(a,b){ var out=[]; if(!a||!b) return out; for(var d=kd(a); keyOf(d)<=b && out.length<62; d.setDate(d.getDate()+1)) out.push(keyOf(d)); return out; }
+function thDate(k){ var d=kd(k); return d.getDate()+' '+TH_M[d.getMonth()]+' '+(d.getFullYear()+543); }
+function beShort(k){ var d=kd(k); return d.getDate()+'/'+(d.getMonth()+1)+'/'+String(d.getFullYear()+543).slice(2); }
+function shiftBg(v){
+  v=String(v||'');
+  if(/^OFF/i.test(v)) return '#cfe8ff';
+  if(/ลา/.test(v)) return '#8fdc8f';
+  if(/ลงเวร/.test(v)) return '#f9cb9c';
+  if(/ประชุม/.test(v)) return '#d9c3f0';
+  if(/ชั้น|MOD/i.test(v)) return '#ffe599';
+  return '';
+}
+function hrFmt(v){
+  v=String(v||'').trim(); if(!v) return '';
+  if(/^OFF/i.test(v)) return 'OFF07.00';
+  var m=v.match(/^(\d{1,2})[.:](\d{2})\s*-\s*(\d{1,2})[.:](\d{2})$/);
+  if(m){ var f=function(h,mm){ return pad2(+h)+(mm==='00'?'':'.'+mm); }; return f(m[1],m[2])+'-'+f(m[3],m[4]); }
+  return v;
+}
+function staffHead(s){ return '<b>'+esc(s.en||s.nick||'')+'</b><br>'+esc(s.name)+(s.emp?'<br>รหัส พนง.'+esc(s.emp):'')+(s.phone?'<br>'+esc(s.phone):''); }
+function cellInput(kind,k,v,ph){ return '<input list="shiftOpts" class="sc" data-kind="'+kind+'" data-k="'+esc(k)+'" value="'+esc(v||'')+'"'+(ph?' placeholder="'+esc(ph)+'" title="ตารางหลัก: '+esc(ph)+'"':'')+' style="width:100%;min-width:92px;text-align:center;border:0;background:'+(shiftBg(v)||'transparent')+'" oninput="rCell(this)">'; }
+function rCell(el){
+  var r=state.roster, c=el.dataset.kind==='main'?r.main.cells:r.help.cells;
+  c[el.dataset.k]=el.value; el.style.background=shiftBg(el.value)||'transparent'; state.rDirty=true; $('rInfo').textContent='● ยังไม่ได้บันทึก';
+}
+function loadRoster(){
+  if(state.rDirty && state.roster && !confirm('ตารางเวรเดือนเดิมยังไม่ได้บันทึก เปลี่ยนเดือนเลยไหม?')){ $('rMonth').value=state.roster.monthKey; return; }
+  loading($('rPaper'));
+  run('getRoster', state.pin||'', $('rMonth').value).then(function(r){
+    state.roster=r; state.rDirty=false; state.rv=state.rv||'main';
+    $('shiftOpts').innerHTML=r.options.map(function(o){ return '<option value="'+esc(o)+'">'; }).join('');
+    $('rInfo').textContent=''; renderRoster();
+  }).catch(fail($('rPaper')));
+}
+function rView(v){ state.rv=v; renderRoster(); }
+function renderRoster(){
+  var r=state.roster; if(!r) return;
+  document.querySelectorAll('#rSub button[data-v]').forEach(function(b){ b.className='btn'+(b.dataset.v===state.rv?'':' alt'); });
+  if(state.rv==='help') renderHelp(); else if(state.rv==='hr') renderHR(); else renderMain();
+}
+function rDirty(){ state.rDirty=true; $('rInfo').textContent='● ยังไม่ได้บันทึก'; }
+
+/* ---------- ตารางหลัก ---------- */
+function renderMain(){
+  var r=state.roster, m=r.main, st=r.staff, days=daysBetween(m.start,m.end);
+  $('rTools').innerHTML='<div class="bar"><label>หัวตาราง</label><input value="'+esc(r.settings.title)+'" style="min-width:280px" oninput="state.roster.settings.title=this.value;rDirty();renderTitleOnly()">'+
+    '<label>ช่วงวันที่</label><input type="date" value="'+m.start+'" onchange="state.roster.main.start=this.value;rDirty();renderMain()"> ถึง <input type="date" value="'+m.end+'" onchange="state.roster.main.end=this.value;rDirty();renderMain()"></div>'+
+    '<div class="muted">พิมพ์หรือเลือกกะในช่อง (เช่น 15.00-24.00, OFF, ลา, ชั้น 2, OFF แทน 18) · รายชื่อในตารางมาจากแท็บ "พนักงาน" ที่ติ๊ก "ตารางเวร" · อย่าลืมกด 💾 บันทึก</div>';
+  if(!st.length){ $('rPaper').innerHTML='<div class="empty">ยังไม่มีพนักงานในตารางเวร — ไปที่แท็บ "พนักงาน" แล้วติ๊กช่อง "ตารางเวร"</div>'; return; }
+  var bd='border:1.5px solid #333;';
+  var h='<table class="r rt" style="border-collapse:collapse"><tr><td id="rTitle" colspan="'+(st.length+2)+'" style="'+bd+'background:#f6c6cf;font-size:18px;font-weight:700;padding:8px">'+esc(r.settings.title)+' วันที่ '+thDate(m.start)+' - '+thDate(m.end)+'</td></tr>'+
+    '<tr><th style="'+bd+'background:#f6c6cf;width:80px">วัน</th><th style="'+bd+'background:#f6c6cf;width:56px">วันที่</th>'+st.map(function(s){ return '<th style="'+bd+'background:#f6c6cf;font-size:11px;font-weight:400;min-width:110px">'+staffHead(s)+'</th>'; }).join('')+'</tr>';
+  days.forEach(function(k,i){
+    var d=kd(k), band=BANDS[Math.floor(i/7)%BANDS.length];
+    h+='<tr><td style="'+bd+'background:'+band+'">'+DOW[d.getDay()]+'</td><td style="'+bd+'background:'+band+'">'+d.getDate()+'</td>'+
+      st.map(function(s){ return '<td style="'+bd+'padding:0">'+cellInput('main',k+'|'+s.name,m.cells[k+'|'+s.name])+'</td>'; }).join('')+'</tr>';
+  });
+  $('rPaper').innerHTML=h+'</table>';
+}
+function renderTitleOnly(){ var r=state.roster, t=$('rTitle'); if(!t) return;
+  t.textContent=state.rv==='help'?r.settings.title+' เดือน '+TH_M[+r.monthKey.slice(5,7)-1]+' '+(+r.monthKey.slice(0,4)+543):r.settings.title+' วันที่ '+thDate(r.main.start)+' - '+thDate(r.main.end); }
+
+/* ---------- ตารางช่วยคนลา ---------- */
+function renderHelp(){
+  var r=state.roster, H=r.help, S=r.settings, bd='border:1.5px solid #333;';
+  var opts=r.allStaff.filter(function(s){ return !H.cols.some(function(c){ return c.name===s.name; }); })
+    .map(function(s){ return '<option value="'+esc(s.name)+'">'+esc((s.en||s.nick)+' '+s.name)+'</option>'; }).join('');
+  $('rTools').innerHTML='<div class="bar"><label>เพิ่มวัน</label><input type="date" id="hDate"><button class="btn alt" onclick="helpAddRow()">+ เพิ่มวัน</button>'+
+    '<label style="margin-left:14px">เพิ่มคน</label><select id="hPerson"><option value="">— เลือกพนักงาน —</option>'+opts+'<option value="__new">+ คนนอก / คนช่วย (กรอกเอง)</option></select><button class="btn alt" onclick="helpAddCol()">+ เพิ่มคน</button></div>'+
+    '<div class="bar"><label>ผู้จัดทำ</label><input value="'+esc(S.preparer)+'" placeholder="น.ส.พรรณภา ภูษา" oninput="state.roster.settings.preparer=this.value;rDirty()"><input value="'+esc(S.preparerTitle)+'" oninput="state.roster.settings.preparerTitle=this.value;rDirty()">'+
+    '<label>ผู้อนุมัติ</label><input value="'+esc(S.approver)+'" placeholder="นายสรไกร พรมลือ" oninput="state.roster.settings.approver=this.value;rDirty()"><input value="'+esc(S.approverTitle)+'" oninput="state.roster.settings.approverTitle=this.value;rDirty()"></div>'+
+    '<div class="muted">เพิ่มวันที่มีคนลา แล้วเพิ่มคนที่มาช่วย · คนในตารางหลักจะดึงกะจากตารางหลักมาให้อัตโนมัติ (แก้ได้) · กด ✕ เพื่อลบวัน/คน</div>';
+  var mi=+r.monthKey.slice(5,7)-1, y=+r.monthKey.slice(0,4)+543;
+  var h='<table class="r rt" style="border-collapse:collapse"><tr><td id="rTitle" colspan="'+(H.cols.length+1)+'" style="'+bd+'background:#bfe3f2;font-size:18px;font-weight:700;padding:8px">'+esc(S.title)+' เดือน '+TH_M[mi]+' '+y+'</td></tr>'+
+    '<tr><th style="'+bd+'background:#bfe3f2;width:110px">วัน</th>'+H.cols.map(function(c,i){ return '<th style="'+bd+'background:#bfe3f2;font-size:11px;font-weight:400;min-width:120px">'+staffHead(c)+' <button class="toggle" style="display:inline;color:#c00" onclick="helpDelCol('+i+')">✕</button></th>'; }).join('')+'</tr>';
+  if(!H.rows.length) h+='<tr><td colspan="'+(H.cols.length+1)+'" class="empty" style="'+bd+'">ยังไม่มีวัน — เลือกวันที่แล้วกด "+ เพิ่มวัน"</td></tr>';
+  H.rows.forEach(function(k,i){
+    var d=kd(k);
+    h+='<tr><td style="'+bd+'background:#bfe3f2;font-weight:600">'+DOW[d.getDay()]+' '+d.getDate()+' <button class="toggle" style="display:inline;color:#c00" onclick="helpDelRow('+i+')">✕</button></td>'+
+      H.cols.map(function(c){ return '<td style="'+bd+'padding:0">'+cellInput('help',k+'|'+c.name,H.cells[k+'|'+c.name],r.main.cells[k+'|'+c.name])+'</td>'; }).join('')+'</tr>';
+  });
+  h+='</table><table style="width:100%;margin-top:26px;border:1px solid #333"><tr><td style="padding:22px 30px;width:50%">ผู้จัดทำ.......................................................<br><span style="margin-left:40px">'+esc(S.preparer)+'</span><br><span style="margin-left:20px">'+esc(S.preparerTitle)+'</span></td>'+
+    '<td style="padding:22px 30px">ผู้อนุมัติ.......................................................<br><span style="margin-left:40px">'+esc(S.approver)+'</span><br><span style="margin-left:20px">'+esc(S.approverTitle)+'</span></td></tr></table>';
+  $('rPaper').innerHTML=h;
+}
+function helpAddRow(){
+  var k=$('hDate').value, H=state.roster.help, M=state.roster.main;
+  if(!k){ toast('เลือกวันที่ก่อน'); return; }
+  if(H.rows.indexOf(k)>=0){ toast('มีวันนี้แล้ว'); return; }
+  H.rows.push(k); H.rows.sort();
+  H.cols.forEach(function(c){ var v=M.cells[k+'|'+c.name]; if(v && !H.cells[k+'|'+c.name]) H.cells[k+'|'+c.name]=v; });
+  rDirty(); renderHelp();
+}
+function helpAddCol(){
+  var r=state.roster, H=r.help, v=$('hPerson').value, p;
+  if(!v){ toast('เลือกคนก่อน'); return; }
+  if(v==='__new'){
+    ['exName','exEn','exEmp','exPh'].forEach(function(i){ $(i).value=''; }); $('exEr').textContent='';
+    $('extMd').classList.add('on'); setTimeout(function(){ $('exName').focus(); },50); return;
+  } else { var s=r.allStaff.filter(function(x){ return x.name===v; })[0]; p={ name:s.name, en:s.en||s.nick, emp:s.emp, phone:s.phone }; }
+  helpPushCol(p);
+}
+function submitExt(){
+  var n=$('exName').value.trim(); if(!n){ $('exEr').textContent='กรุณากรอกชื่อ-สกุล'; return; }
+  closeMd('extMd'); helpPushCol({ name:n, en:$('exEn').value.trim(), emp:$('exEmp').value.trim(), phone:$('exPh').value.trim() });
+}
+function helpPushCol(p){
+  var r=state.roster, H=r.help;
+  if(H.cols.some(function(c){ return c.name===p.name; })){ toast('มีคนนี้แล้ว'); return; }
+  H.cols.push(p);
+  H.rows.forEach(function(k){ var x=r.main.cells[k+'|'+p.name]; if(x && !H.cells[k+'|'+p.name]) H.cells[k+'|'+p.name]=x; });
+  rDirty(); renderHelp();
+}
+function helpDelRow(i){ var H=state.roster.help, k=H.rows[i]; if(!confirm('ลบวัน '+thDate(k)+' ?')) return;
+  H.rows.splice(i,1); Object.keys(H.cells).forEach(function(c){ if(c.indexOf(k+'|')===0) delete H.cells[c]; }); rDirty(); renderHelp(); }
+function helpDelCol(i){ var H=state.roster.help, n=H.cols[i].name; if(!confirm('ลบ '+n+' ออกจากตารางช่วย?')) return;
+  H.cols.splice(i,1); Object.keys(H.cells).forEach(function(c){ if(c.split('|')[1]===n) delete H.cells[c]; }); rDirty(); renderHelp(); }
+
+/* ---------- รายงานส่ง HR ---------- */
+function hrHead(){
+  var r=state.roster, S=r.settings, m=r.main;
+  state.hrHead=state.hrHead&&state.hrHead.mk===r.monthKey?state.hrHead:{ mk:r.monthKey, month:TH_M[+r.monthKey.slice(5,7)-1], start:beShort(m.start), end:beShort(m.end) };
+  return state.hrHead;
+}
+function renderHR(){
+  var r=state.roster, S=r.settings, m=r.main, hh=hrHead(), days=daysBetween(m.start,m.end), st=r.staff.filter(function(s){ return s.hr; });
+  $('rTools').innerHTML='<div class="bar"><label>สังกัด</label><input value="'+esc(S.org)+'" style="width:90px" oninput="state.roster.settings.org=this.value;rDirty();renderHRTable()">'+
+    '<label>แผนก</label><input value="'+esc(S.dept)+'" style="width:120px" oninput="state.roster.settings.dept=this.value;rDirty();renderHRTable()">'+
+    '<label>ประจำเดือน</label><input value="'+esc(hh.month)+'" style="width:120px" oninput="state.hrHead.month=this.value;renderHRTable()">'+
+    '<label>ตั้งแต่วันที่</label><input value="'+esc(hh.start)+'" style="width:100px" oninput="state.hrHead.start=this.value;renderHRTable()">'+
+    '<label>ถึงวันที่</label><input value="'+esc(hh.end)+'" style="width:100px" oninput="state.hrHead.end=this.value;renderHRTable()"></div>'+
+    '<div class="muted">ดึงจากตารางหลัก เฉพาะพนักงานที่ติ๊ก "HR" · แปลงรูปแบบ: 15.00-24.00 → 15-24 · OFF → OFF07.00 · ค่าในหัวรายงานแก้ได้ (สังกัด/แผนกจำไว้หลังกดบันทึก)</div>';
+  renderHRTable();
+}
+function renderHRTable(){
+  var r=state.roster, S=r.settings, m=r.main, hh=state.hrHead, days=daysBetween(m.start,m.end), st=r.staff.filter(function(s){ return s.hr; });
+  var bd='border:1.5px solid #333;', G='#c8f2c8', P='#f9c9cf', C='#bfe9f7';
+  var h='<table class="r" style="border-collapse:collapse;width:auto"><tr><td colspan="3" style="border:0"></td><td style="border:0;color:#00f;font-weight:700;white-space:nowrap;text-align:right">สังกัด</td><td style="'+bd+'background:'+C+';color:#c00;font-weight:700">'+esc(S.org)+'</td><td style="border:0;color:#00f;font-weight:700;white-space:nowrap;text-align:right">แผนก</td><td colspan="2" style="'+bd+'background:'+C+';color:#c00;font-weight:700">'+esc(S.dept)+'</td></tr>'+
+    '<tr><td colspan="3" style="border:0"></td><td style="border:0;color:#00f;font-weight:700;white-space:nowrap;text-align:right">ประจำเดือน</td><td style="'+bd+'background:'+C+';color:#c00;font-weight:700">'+esc(hh.month)+'</td><td style="border:0;color:#00f;font-weight:700;white-space:nowrap;text-align:right">ตั้งแต่วันที่</td><td colspan="2" style="'+bd+'background:'+C+';color:#c00;font-weight:700">'+esc(hh.start)+'</td><td style="border:0;color:#00f;font-weight:700;white-space:nowrap;text-align:right">ถึงวันที่</td><td colspan="2" style="'+bd+'background:'+C+';color:#c00;font-weight:700">'+esc(hh.end)+'</td></tr>'+
+    '<tr><td colspan="99" style="height:10px;border:0"></td></tr>'+
+    '<tr><td rowspan="'+(st.length+2)+'" style="'+bd+'background:'+P+';font-weight:700;min-width:80px">'+esc(S.dept)+'</td><th rowspan="2" style="'+bd+'background:'+P+'">ลำดับ</th><th rowspan="2" style="'+bd+'background:'+P+';min-width:190px">ชื่อพนักงาน</th><th style="'+bd+'background:'+G+'">วัน</th>'+
+    days.map(function(k){ return '<th style="'+bd+'background:'+G+';min-width:68px">'+DOWF[kd(k).getDay()]+'</th>'; }).join('')+'</tr>'+
+    '<tr><th style="'+bd+'background:'+P+'">รหัส<br>พนักงาน</th>'+days.map(function(k){ return '<th style="'+bd+'background:'+P+'">วันที่ '+kd(k).getDate()+'</th>'; }).join('')+'</tr>';
+  if(!st.length) h+='<tr><td colspan="'+(days.length+2)+'" class="empty" style="'+bd+'">ยังไม่มีพนักงานที่ติ๊ก "HR" ในแท็บพนักงาน</td></tr>';
+  st.forEach(function(s,i){
+    h+='<tr><td style="'+bd+'background:'+G+'">'+(i+1)+'</td><td style="'+bd+'background:'+G+';text-align:left">'+esc(s.name)+'</td><td style="'+bd+'background:'+G+';font-weight:700">'+esc(s.emp)+'</td>'+
+      days.map(function(k){ var v=hrFmt(m.cells[k+'|'+s.name]); return '<td style="'+bd+'background:'+G+(/^OFF/.test(v)?';font-weight:700':'')+'">'+esc(v)+'</td>'; }).join('')+'</tr>';
+  });
+  $('rPaper').innerHTML=h+'</table>';
+}
+
+/* ---------- บันทึก ---------- */
+function saveRosterUI(b){
+  var r=state.roster; if(!r) return;
+  b.disabled=true;
+  run('saveRoster', state.pin||'', r.monthKey, r.main, r.help, r.settings).then(function(msg){
+    b.disabled=false; state.rDirty=false; $('rInfo').textContent='✓ บันทึกแล้ว '+new Date().toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'}); toast(msg);
+  }).catch(function(e){ b.disabled=false; fail()(e); });
+}
+
+/* ---------- Excel (1 ไฟล์ต่อเดือน: ตารางหลัก / ตารางช่วยคนลา / ส่ง HR) ---------- */
+function xs(fill,bold,size,color,align){ return { font:{name:'Tahoma',sz:size||10,bold:!!bold,color:color?{rgb:color}:undefined}, fill:fill?{patternType:'solid',fgColor:{rgb:fill.replace('#','').toUpperCase()}}:undefined,
+  alignment:{horizontal:align||'center',vertical:'center',wrapText:true}, border:{top:{style:'thin'},bottom:{style:'thin'},left:{style:'thin'},right:{style:'thin'}} }; }
+function sheetFrom(rows, merges, cols){
+  var ws={}, R=0, maxC=0;
+  rows.forEach(function(row,ri){ row.forEach(function(c,ci){ if(c==null) return; var o=typeof c==='object'?c:{v:c};
+    ws[XLSX.utils.encode_cell({r:ri,c:ci})]={v:o.v==null?'':o.v,t:typeof o.v==='number'?'n':'s',s:o.s}; if(ci>maxC) maxC=ci; }); R=ri; });
+  ws['!ref']=XLSX.utils.encode_range({s:{r:0,c:0},e:{r:R,c:maxC}});
+  ws['!merges']=merges||[]; if(cols) ws['!cols']=cols; return ws;
+}
+function xlsMain(){
+  var r=state.roster, m=r.main, st=r.staff, days=daysBetween(m.start,m.end), P='f6c6cf';
+  var rows=[[{v:r.settings.title+' วันที่ '+thDate(m.start)+' - '+thDate(m.end),s:xs(P,true,14)}].concat(st.map(function(){return {v:'',s:xs(P)};})).concat([{v:'',s:xs(P)}])];
+  rows.push([{v:'วัน',s:xs(P,true)},{v:'วันที่',s:xs(P,true)}].concat(st.map(function(s){ return {v:[s.en||s.nick,s.name,s.emp?'รหัส พนง.'+s.emp:'',s.phone].filter(String).join('\n'),s:xs(P,true,9)}; })));
+  days.forEach(function(k,i){ var d=kd(k), b=BANDS[Math.floor(i/7)%BANDS.length];
+    rows.push([{v:DOW[d.getDay()],s:xs(b)},{v:d.getDate(),s:xs(b)}].concat(st.map(function(s){ var v=m.cells[k+'|'+s.name]||''; return {v:v,s:xs(shiftBg(v))}; }))); });
+  var ws=sheetFrom(rows,[{s:{r:0,c:0},e:{r:0,c:st.length+1}}],[{wch:10},{wch:7}].concat(st.map(function(){return {wch:16};})));
+  ws['!rows']=[{hpt:26},{hpt:62}]; return ws;
+}
+function xlsHelp(){
+  var r=state.roster, H=r.help, S=r.settings, B='bfe3f2', n=H.cols.length;
+  var rows=[[{v:S.title+' เดือน '+TH_M[+r.monthKey.slice(5,7)-1]+' '+(+r.monthKey.slice(0,4)+543),s:xs(B,true,14)}].concat(H.cols.map(function(){return {v:'',s:xs(B)};}))];
+  rows.push([{v:'วัน',s:xs(B,true)}].concat(H.cols.map(function(c){ return {v:[c.en,c.name,c.emp?'รหัส พนง.'+c.emp:'',c.phone].filter(String).join('\n'),s:xs(B,true,9)}; })));
+  H.rows.forEach(function(k){ var d=kd(k); rows.push([{v:DOW[d.getDay()]+' '+d.getDate(),s:xs(B,true)}].concat(H.cols.map(function(c){ var v=H.cells[k+'|'+c.name]||''; return {v:v,s:xs(shiftBg(v))}; }))); });
+  rows.push([]); rows.push([]);
+  var sg={font:{name:'Tahoma',sz:11,bold:true},alignment:{horizontal:'center'}};
+  rows.push([{v:'ผู้จัดทำ..........................................',s:sg},null,null,{v:'ผู้อนุมัติ..........................................',s:sg}]);
+  rows.push([{v:S.preparer,s:sg},null,null,{v:S.approver,s:sg}]);
+  rows.push([{v:S.preparerTitle,s:sg},null,null,{v:S.approverTitle,s:sg}]);
+  var L=rows.length, mg=[{s:{r:0,c:0},e:{r:0,c:Math.max(n,1)}}];
+  [L-3,L-2,L-1].forEach(function(rr){ mg.push({s:{r:rr,c:0},e:{r:rr,c:2}}); mg.push({s:{r:rr,c:3},e:{r:rr,c:Math.max(5,n)}}); });
+  var ws=sheetFrom(rows,mg,[{wch:14}].concat(H.cols.map(function(){return {wch:18};})));
+  ws['!rows']=[{hpt:26},{hpt:62}]; return ws;
+}
+function xlsHR(){
+  var r=state.roster, S=r.settings, m=r.main, hh=hrHead(), days=daysBetween(m.start,m.end), st=r.staff.filter(function(s){ return s.hr; });
+  var G='c8f2c8', P='f9c9cf', C='bfe9f7', lb={font:{name:'Tahoma',sz:11,bold:true,color:{rgb:'0000FF'}},alignment:{horizontal:'right'}}, vl=function(v){ return {v:v,s:xs(C,true,11,'C00000')}; };
+  var rows=[[],[null,null,null,{v:'สังกัด',s:lb},vl(S.org),{v:'แผนก',s:lb},vl(S.dept),vl('')],[null,null,null,{v:'ประจำเดือน',s:lb},vl(hh.month),{v:'ตั้งแต่วันที่',s:lb},vl(hh.start),vl(''),{v:'ถึงวันที่',s:lb},vl(hh.end),vl('')],[]];
+  rows.push([{v:S.dept,s:xs(P,true,11)},{v:'ลำดับ',s:xs(P,true)},{v:'ชื่อพนักงาน',s:xs(P,true)},{v:'วัน',s:xs(G,true)}].concat(days.map(function(k){ return {v:DOWF[kd(k).getDay()],s:xs(G,true)}; })));
+  rows.push([{v:'',s:xs(P)},{v:'',s:xs(P)},{v:'',s:xs(P)},{v:'รหัส\nพนักงาน',s:xs(P,true)}].concat(days.map(function(k){ return {v:'วันที่ '+kd(k).getDate(),s:xs(P,true)}; })));
+  st.forEach(function(s,i){ rows.push([{v:'',s:xs(P)},{v:i+1,s:xs(G,true)},{v:s.name,s:xs(G,true,10,null,'left')},{v:s.emp,s:xs(G,true)}].concat(days.map(function(k){ var v=hrFmt(m.cells[k+'|'+s.name]); return {v:v,s:xs(G,/^OFF/.test(v))}; }))); });
+  var mg=[{s:{r:6-2,c:0},e:{r:5+st.length,c:0}},{s:{r:4,c:1},e:{r:5,c:1}},{s:{r:4,c:2},e:{r:5,c:2}},{s:{r:1,c:6},e:{r:1,c:7}},{s:{r:2,c:6},e:{r:2,c:7}},{s:{r:2,c:9},e:{r:2,c:10}}];
+  var ws=sheetFrom(rows,mg,[{wch:12},{wch:7},{wch:28},{wch:10}].concat(days.map(function(){return {wch:11};})));
+  return ws;
+}
+function rExcel(){
+  var r=state.roster; if(!r) return;
+  if(typeof XLSX==='undefined'){ toast('โหลดตัวสร้าง Excel ไม่สำเร็จ ลองรีเฟรชหน้า'); return; }
+  var wb=XLSX.utils.book_new(), mi=+r.monthKey.slice(5,7)-1, tag=MONTHS[mi]+' '+String(+r.monthKey.slice(0,4)+543).slice(2);
+  XLSX.utils.book_append_sheet(wb, xlsMain(), ('ตารางหลัก '+tag).replace(/[\\\/?*\[\]:]/g,''));
+  XLSX.utils.book_append_sheet(wb, xlsHelp(), ('ตารางช่วยคนลา '+tag).replace(/[\\\/?*\[\]:]/g,''));
+  XLSX.utils.book_append_sheet(wb, xlsHR(), ('ส่ง HR '+tag).replace(/[\\\/?*\[\]:]/g,''));
+  XLSX.writeFile(wb, 'ตารางเวร_PetShop_'+TH_M[mi]+'_'+(+r.monthKey.slice(0,4)+543)+'.xlsx');
+}
+
+/* =============== พนักงาน / Target =============== */
+function loadTarget(){
+  run('getAdminData', $('tYear').value, state.pin||'').then(function(d){
+    state.admin=d;
+    renderStaff(d.staff); renderTarget(d.targets);
+  }).catch(fail());
+}
+function renderStaff(list){
+  var h='<tr><th style="min-width:190px">ชื่อ-สกุล</th><th>ชื่อเล่น</th><th>รหัส (#)</th><th>ใช้งาน<br>(นัด)</th><th>ชื่อเล่น EN<br>(ตารางเวร)</th><th>รหัสพนักงาน</th><th>เบอร์โทร</th><th>ตารางเวร</th><th>HR</th><th></th></tr>';
+  (list.length?list:[{name:'',nick:'',code:'',active:true}]).forEach(function(s){ h+=staffRow(s); });
+  $('staffTbl').innerHTML=h;
+}
+function staffRow(s){
+  return '<tr><td><input value="'+esc(s.name)+'" placeholder="นายอภิวัฒน์ ไสลสุข"></td><td><input value="'+esc(s.nick)+'" placeholder="อาร์ม"></td>'+
+    '<td><input value="'+esc(s.code)+'" placeholder="AM" style="text-transform:uppercase;width:60px"></td><td style="text-align:center"><input type="checkbox" '+(s.active!==false?'checked':'')+' style="width:auto"></td>'+
+    '<td><input value="'+esc(s.en||'')+'" placeholder="ARM" style="text-transform:uppercase"></td><td><input value="'+esc(s.emp||'')+'" placeholder="2402"></td><td><input value="'+esc(s.phone||'')+'" placeholder="089-xxxxxxx"></td>'+
+    '<td style="text-align:center"><input type="checkbox" '+(s.roster?'checked':'')+' style="width:auto"></td><td style="text-align:center"><input type="checkbox" '+(s.hr?'checked':'')+' style="width:auto"></td>'+
+    '<td><button class="btn alt" onclick="this.closest(\'tr\').remove()">ลบ</button></td></tr>';
+}
+function addStaff(){ $('staffTbl').insertAdjacentHTML('beforeend', staffRow({name:'',nick:'',code:'',active:true})); }
+function pinVal(){ return state.pin||''; }
+function saveStaffUI(btn){
+  var list=[].slice.call($('staffTbl').querySelectorAll('tr')).slice(1).map(function(tr){
+    var i=tr.querySelectorAll('input'); return {name:i[0].value,nick:i[1].value,code:i[2].value,active:i[3].checked,en:i[4].value,emp:i[5].value,phone:i[6].value,roster:i[7].checked,hr:i[8].checked};
+  });
+  run('saveStaff', list, pinVal(btn)).then(function(m){ toast(m); state.appt=state.roster=null; loadTarget(); }).catch(fail());
+}
+function renderTarget(rows){
+  var h='<tr><th style="min-width:200px">ชื่อ / หัวข้อ</th><th>Target/วัน</th>'+MONTHS.map(function(m){return '<th>'+m+'</th>';}).join('')+'<th>รวมปี</th><th></th></tr>';
+  rows.forEach(function(r,i){
+    h+='<tr data-code="'+esc(r.code)+'" data-name="'+esc(r.name)+'"'+(r.kind==='special'?' style="background:#fffbe6"':'')+'><td>'+esc(r.name)+(r.kind==='staff'?' <span class="muted">#'+esc(r.code)+'</span>':'')+'</td>'+
+      '<td><input class="n" type="number" value="'+(r.day===''?'':r.day)+'"'+(r.kind==='special'&&r.code!=='TEAM'?' disabled placeholder="-"':'')+'></td>';
+    for(var m=0;m<12;m++) h+='<td><input class="n mo" type="number" value="'+(r.months[m]||'')+'" oninput="sumRow(this)"></td>';
+    h+='<td class="sum" style="text-align:right;font-weight:700"></td><td><button class="btn alt" title="คัดลอก ม.ค. ไปทุกเดือน" onclick="fillRow(this)">→</button></td></tr>';
+  });
+  $('tgtTbl').innerHTML=h;
+  $('tgtTbl').querySelectorAll('tr').forEach(function(tr,i){ if(i) sumRow(tr.querySelector('.mo')); });
+}
+function sumRow(el){ var tr=el.closest('tr'), s=0; tr.querySelectorAll('.mo').forEach(function(i){ s+=Number(i.value)||0; }); tr.querySelector('.sum').textContent=n0(s); }
+function fillRow(b){ var ins=b.closest('tr').querySelectorAll('.mo'); ins.forEach(function(i){ i.value=ins[0].value; }); sumRow(ins[0]); }
+function saveTargetUI(btn){
+  var rows=[].slice.call($('tgtTbl').querySelectorAll('tr')).slice(1).map(function(tr){
+    var ins=tr.querySelectorAll('input');
+    return {code:tr.dataset.code, name:tr.dataset.name, day:ins[0].value, months:[].slice.call(tr.querySelectorAll('.mo')).map(function(i){return i.value;})};
+  });
+  run('saveTargets', $('tYear').value, rows, pinVal(btn)).then(function(m){ toast(m); state.appt=state.weekly=null; }).catch(fail());
+}
+
+/* =============== บันทึกเป็นรูป =============== */
+function capture(id, name){
+  var el=$(id);
+  if(typeof html2canvas==='undefined'){ toast('โหลดตัวสร้างรูปไม่สำเร็จ ลองรีเฟรชหน้า'); return; }
+  toast('กำลังสร้างรูป...');
+  html2canvas(el,{scale:2,backgroundColor:'#ffffff',windowWidth:el.scrollWidth+40,
+    ignoreElements:function(n){ return n.classList && n.classList.contains('toggle'); }}).then(function(c){
+    var url=c.toDataURL('image/png');
+    $('ovImg').src=url; $('ovDl').href=url; $('ovDl').download='รายงาน'+name+'_'+(new Date().toISOString().slice(0,10))+'.png';
+    $('ov').style.display='flex';
+  }).catch(function(e){ toast('สร้างรูปไม่สำเร็จ: '+e.message); });
+}
+
+/* ---------- เริ่มต้น ---------- */
+(function init(){
+  var t=today();
+  $('apptDate').value=t; $('saleDate').value=t; $('pintoDate').value=t; $('weekMonth').value=t.slice(0,7); $('amMonth').value=t.slice(0,7); $('amTo').value=t.slice(0,7); $('sdDate').value=t; $('rMonth').value=t.slice(0,7); var d6=new Date(Number(t.slice(0,4)), Number(t.slice(5,7))-6, 1); $('naStart').value=d6.getFullYear()+'-'+('0'+(d6.getMonth()+1)).slice(-2)+'-01'; $('naEnd').value=t; $('tYear').value=t.slice(0,4);
+  $('saleDate').addEventListener('change',function(){ $('pintoDate').value=this.value; });
+  state.startTab=['appt','month','daily','noappt','sameday','weekly','upload','grab','staff','target','roster','users','purchase','cabs'].indexOf(START_TAB)>=0?START_TAB:(START_TAB==='cab'?'cabs':'upload');
+  initAuth();
+})();
+</script>
+</body>
+</html>
