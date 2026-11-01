@@ -5,12 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b5394">
 <title>ระบบรายงาน Pet Shop R9</title>
+<!-- index v3 -->
 <style>
   html,body{margin:0;height:100%;background:#0b5394;font-family:'Sarabun',system-ui,sans-serif}
   #app{position:fixed;inset:0;width:100%;height:100%;border:0;background:#eef1f5}
   #load{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;gap:10px;z-index:2;transition:opacity .3s}
   #load .p{font-size:46px}
   #load a{color:#ffd54f;font-size:13px;margin-top:18px}
+  /* กล้องสแกน (เปิดจากหน้านอกสุด เพราะหน้าระบบที่ซ้อนอยู่ข้างในเปิดกล้องเองไม่ได้) */
+  #cam{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:5;padding:14px}
+  #cam.on{display:flex}
+  #cam .bx{background:#fff;border-radius:16px;width:100%;max-width:460px;padding:16px;text-align:center}
+  #cam h3{margin:0 0 10px;color:#0b5394}
+  #reader{width:100%;min-height:240px;background:#000;border-radius:10px;overflow:hidden}
+  #camMsg{color:#c00;font-size:14px;min-height:20px;margin:8px 0}
+  #cam button,#cam label{display:block;width:100%;box-sizing:border-box;margin-top:8px;padding:12px;border-radius:10px;font:inherit;font-size:16px;font-weight:700;cursor:pointer}
+  #cam .alt{background:#fff;color:#0b5394;border:1.5px solid #0b5394}
 </style>
 </head>
 <body>
@@ -19,6 +29,18 @@
 <iframe id="app" title="ระบบรายงาน Pet Shop"
   allow="camera; clipboard-read; clipboard-write; fullscreen"
   allowfullscreen></iframe>
+
+<div id="cam">
+  <div class="bx">
+    <h3>📷 สแกน Barcode</h3>
+    <div id="reader"></div>
+    <div id="camMsg"></div>
+    <label class="alt">📸 ถ่ายรูป Barcode แทน<input type="file" accept="image/*" capture="environment" hidden id="camFile"></label>
+    <button class="alt" id="camClose">ปิด</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
 <script>
   // ลิงก์เว็บแอป Apps Script (ลงท้าย /exec)
   var WEBAPP_URL = 'https://script.google.com/macros/s/AKfycbxxMZM-qrj3RigIB2vmIZ08eaApZb3AsUn4i4YcnKmSiGAtfNtUuCS8XIOLNyd09trQ/exec';
@@ -28,6 +50,38 @@
   var f = document.getElementById('app');
   f.onload = function(){ var l = document.getElementById('load'); l.style.opacity = 0; setTimeout(function(){ l.style.display = 'none'; }, 300); };
   f.src = target;
+
+  /* ---------- ตัวสแกนสำหรับหน้าระบบ ---------- */
+  var cam = document.getElementById('cam'), msg = document.getElementById('camMsg'), reader = null, replyTo = null, replyOrigin = '*';
+  function okOrigin(o){ return /^https:\/\/([a-z0-9-]+\.)*(googleusercontent\.com|google\.com)$/.test(o); }
+  function send(data){ if(replyTo){ try{ replyTo.postMessage(data, replyOrigin); }catch(e){} } }
+  function stopCam(){ cam.classList.remove('on'); if(reader){ try{ reader.stop().catch(function(){}); }catch(e){} reader = null; } }
+  function done(text){ stopCam(); send({ type:'petshop-scan-result', text:String(text||'').trim() }); }
+  function openCam(){
+    msg.textContent = ''; cam.classList.add('on');
+    if(typeof Html5Qrcode === 'undefined'){ msg.textContent = 'โหลดตัวสแกนไม่สำเร็จ — ใช้ "ถ่ายรูป Barcode แทน"'; return; }
+    document.getElementById('reader').innerHTML = '';
+    reader = new Html5Qrcode('reader');
+    reader.start({ facingMode:'environment' }, { fps:10, qrbox:{ width:260, height:140 } }, function(t){ done(t); }, function(){})
+      .catch(function(){ msg.textContent = 'เปิดกล้องไม่ได้ — อนุญาตการใช้กล้องในเบราว์เซอร์ หรือกด "ถ่ายรูป Barcode แทน"'; });
+  }
+  document.getElementById('camClose').onclick = function(){ stopCam(); send({ type:'petshop-scan-cancel' }); };
+  document.getElementById('camFile').onchange = function(){
+    var file = this.files[0]; this.value = ''; if(!file) return;
+    if(typeof Html5Qrcode === 'undefined'){ msg.textContent = 'โหลดตัวสแกนไม่สำเร็จ'; return; }
+    if(reader){ try{ reader.stop().catch(function(){}); }catch(e){} }
+    var h = new Html5Qrcode('reader');
+    h.scanFile(file, false).then(done).catch(function(){ msg.textContent = 'อ่าน Barcode จากรูปไม่ได้ ลองถ่ายให้ใกล้และชัดขึ้น'; });
+  };
+  window.addEventListener('message', function(e){
+    var d = e.data || {};
+    if(typeof d !== 'object' || d.type !== 'petshop-scan-req') return;   // รับเฉพาะคำขอเปิดกล้อง
+    if(d.type === 'petshop-scan-req'){
+      replyTo = e.source; replyOrigin = (e.origin && e.origin !== 'null') ? e.origin : '*';
+      send({ type:'petshop-scan-ack' });
+      openCam();
+    }
+  });
 </script>
 </body>
 </html>
