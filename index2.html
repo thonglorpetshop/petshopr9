@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>THONGLOR PET COMMONS · E-Catalogs</title>
+<meta name="theme-color" content="#00AEEF">
+<style>
+  html, body { margin: 0; height: 100%; background: #F6FAFB; }
+  iframe { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; display: block; }
+  #fallback { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; text-align: center;
+              font: 16px/1.5 Tahoma, sans-serif; color: #33475B; padding: 24px; }
+  #fallback a { display: inline-block; margin-top: 12px; background: #00AEEF; color: #fff; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: bold; }
+</style>
+</head>
+<body>
+<!--
+  หน้าครอบระบบ E-Catalogs (ไม่มีแถบ "สร้างโดยผู้ใช้ Google Apps Script")
+  เว็บ: https://thonglorpetshop.github.io/catalog/
+  Apps Script → พร็อพเพอร์ตีของสคริปต์ → PUBLIC_URL = https://thonglorpetshop.github.io/catalog/
+  ลิงก์: ?mode=staff  ?mode=customer  ?mode=admin  และ QR ?p=SKU
+-->
+<iframe id="app" title="THONGLOR PET COMMONS E-Catalogs" allow="autoplay; clipboard-write; fullscreen; camera"></iframe>
+<div id="fallback">
+  <div>
+    ถ้าหน้าไม่ขึ้น กดเปิดระบบโดยตรงได้ที่ปุ่มด้านล่าง<br>
+    <a id="direct" href="#" target="_top">เปิด E-Catalogs</a>
+  </div>
+</div>
+<script>
+  var EXEC_URL = 'https://script.google.com/macros/s/AKfycbxL1E3cQo6DFPp5sFAykjpZebDCuImUKPFODAHXNgSUZE_KuRwoY6F6hUK2_CU5wTME3g/exec';
+
+  // ส่ง ?mode= / ?p= / ?productId= และพารามิเตอร์อื่นจากลิงก์หน้านี้ ต่อไปให้ระบบ
+  var src = EXEC_URL + (location.search || '');
+  var frame = document.getElementById('app');
+  frame.src = src;
+  document.getElementById('direct').href = src;
+
+  // ถ้า 15 วินาทียังโหลดไม่ขึ้น (เช่น เครือข่ายบล็อก) แสดงปุ่มเปิดโดยตรง
+  var loaded = false;
+  frame.addEventListener('load', function () { loaded = true; });
+  setTimeout(function () { if (!loaded) document.getElementById('fallback').style.display = 'flex'; }, 15000);
+
+  // ---------- กล้องสแกน Barcode (เปิดที่หน้านี้ เพราะหน้าระบบที่ซ้อนอยู่ข้างในเปิดกล้องเองไม่ได้) ----------
+  var camSrc = null, cam = null;
+  window.addEventListener('message', function (e) {
+    var d = e.data || {};
+    if (d.type !== 'tpc-scan-req' || !e.source) return;
+    camSrc = e.source;
+    try { camSrc.postMessage({ type: 'tpc-scan-ack' }, '*'); } catch (x) {}
+    openCam();
+  });
+  function loadLib(cb) {
+    if (window.Html5Qrcode) return cb();
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js';
+    s.onload = cb; s.onerror = function () { alert('โหลดตัวสแกนไม่ได้ – ตรวจสอบอินเทอร์เน็ต'); closeCam(); };
+    document.head.appendChild(s);
+  }
+  function openCam() {
+    var w = document.getElementById('camWrap');
+    if (!w) {
+      w = document.createElement('div'); w.id = 'camWrap';
+      w.style.cssText = 'position:fixed;inset:0;z-index:99;background:rgba(0,0,0,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:16px;font:15px Tahoma,sans-serif;color:#fff';
+      w.innerHTML = '<div id="camReader" style="width:100%;max-width:440px;background:#000;border-radius:12px;overflow:hidden"></div>' +
+        '<div id="camMsg" style="height:20px"></div>' +
+        '<button id="camClose" style="background:#fff;color:#222;border:0;border-radius:12px;padding:11px 26px;font-weight:bold;font-size:15px">เสร็จ / ปิดกล้อง</button>';
+      document.body.appendChild(w);
+      document.getElementById('camClose').onclick = function () { closeCam(true); };
+    }
+    w.style.display = 'flex';
+    loadLib(function () {
+      var last = '', lastT = 0;
+      cam = new Html5Qrcode('camReader');
+      cam.start({ facingMode: 'environment' }, { fps: 10, qrbox: { width: 260, height: 140 } }, function (txt) {
+        if (txt === last && Date.now() - lastT < 1800) return;
+        last = txt; lastT = Date.now();
+        document.getElementById('camMsg').textContent = '✓ ' + txt;
+        try { camSrc && camSrc.postMessage({ type: 'tpc-scan', text: txt }, '*'); } catch (x) {}
+      }).catch(function () { alert('เปิดกล้องไม่ได้ – กดอนุญาตการใช้กล้องในเบราว์เซอร์'); closeCam(true); });
+    });
+  }
+  function closeCam(notify) {
+    var w = document.getElementById('camWrap');
+    var done = function () { if (w) w.style.display = 'none'; var r = document.getElementById('camReader'); if (r) r.innerHTML = ''; cam = null; };
+    if (cam) cam.stop().then(done, done); else done();
+    if (notify) { try { camSrc && camSrc.postMessage({ type: 'tpc-scan-cancel' }, '*'); } catch (x) {} }
+  }
+</script>
+</body>
+</html>
